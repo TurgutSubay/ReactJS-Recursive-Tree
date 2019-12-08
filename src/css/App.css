@@ -1,0 +1,48 @@
+.App {
+  text-align: center;
+}
+ul{
+  list-style-type: none;
+}
+.myUL {
+  margin: 0;
+  padding: 0;
+}
+
+.addBtnTop {
+  margin-top:10px;
+}
+.myCaret {
+  cursor: pointer;
+  user-select: none; /* Prevent text selection */
+  
+  
+  -webkit-user-select: none; /* Safari 3.1+ */
+  -moz-user-select: none; /* Firefox 2+ */
+  -ms-user-select: none; /* IE 10+ */
+}
+
+.myCaret::before {
+  content: "\25B6";
+  color: black;
+  display: inline-block;
+  margin-right: 10px;
+  
+}
+/* Rotate the caret/arrow icon when clicked on (using JavaScript) */
+.myCaret-down::before {
+ -ms-transform: rotate(90deg); /* IE 9 */
+ -webkit-transform: rotate(90deg); /* Safari */
+ margin-right: 10px;
+ transform: rotate(90deg);  
+
+}
+
+.nestedClosed {
+  display: none; 
+}
+
+/* Show the nested list when the user clicks on the caret/arrow (with JavaScript) */
+.nestedShow {
+  display: block;
+}
