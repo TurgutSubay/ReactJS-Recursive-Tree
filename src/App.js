@@ -7,13 +7,18 @@ import { set_data } from './reducers/allReducers.js'
 
 const styleLeft = {
   'float': 'left',
-  'width': '50%'
+  'width': '30%',
+  backgroundColor:'#F6DDCC',
+  overflow: 'auto',
+  height: '100vh'
 }
 const styleLeft2 = {
   'float': 'left',
-  'width': '10%',
-  'marginTop': '20px',
-  'marginLeft': '20px',
+  'width': '68%',
+  'marginTop': '0px',
+  'marginLeft': '0px',
+  backgroundColor:'#F6DDCC',
+  padding:'10px'
 }
 var appData;
 
@@ -55,13 +60,28 @@ class App extends React.Component {
     }
   }
   showData(e) {
-    alert("data");
+    appData = this.state.data;
+    let row =  e.target.value;
+    let id=-1;
+    if(e.target.hasAttribute('title')){
+       id =  e.target.title;
+    }else{
+      id =  e.target.id;
+    }
+    
+    let text="";
+    appData.forEach(element => {
+      if (element.id == id){
+        text =element.text;
+      }
+    });       
+     document.getElementById('myText').innerText = text;
   }
 
   query(parentRow, startRow) {
     let arrCh = [];
     appData = this.state.data;
-    console.log('P:' + parentRow + ' ' + appData.length);
+    //console.log('P:' + parentRow + ' ' + appData.length);
     for (let row1 = 0; row1 < appData.length; row1++) {
       if (Number(appData[row1].parent) === Number(parentRow)) {
         arrCh.push(
@@ -79,7 +99,6 @@ class App extends React.Component {
     }
     let eArry = [];
     var arry = this.query(parentRow, startRow);
-    console.log('Array: ' + arry);
 
     for (var row = 0; row < arry.length; row++) {
       let i = arry[row];
@@ -92,7 +111,7 @@ class App extends React.Component {
         eArry.push(
           <li ref={id} key={id}>
             <span title={id} className="myCaret" onClick={(id) => this.setCSS(id)}>
-              <div title={id} className="btn btn-danger addBtnTop" >NO:{row}- P:{parent} id: {id}-- {caption}</div>
+              <div title={id} value={row} className="btn btn-danger addBtnTop" onClick={(e) => this.showData(e)}>NO:{row}- P:{parent} id: {id}-- {caption}</div>
             </span>
             <ul id={id} ref={id} className={this.state.liCSS} data={text}>
               {this.tree_(id, id)}
