@@ -1,22 +1,22 @@
 import React from 'react';
 import Nav from './nav.js'
 import './css/App.css';
-import Data from './data.js';
+import {Data, AppendChild} from './data.js';
 import { store } from './index.js';
 import { set_data } from './reducers/allReducers.js'
 
 const styleLeft = {
-  'float': 'left',
-  'width': '30%',
+  float: 'left',
+  width: '30%',
   backgroundColor:'#F6DDCC',
   overflow: 'auto',
   height: '100vh'
 }
 const styleLeft2 = {
-  'float': 'left',
-  'width': '68%',
-  'marginTop': '0px',
-  'marginLeft': '0px',
+  float: 'left',
+  width: '68%',
+  marginTop: '0px',
+  marginLeft: '0px',
   backgroundColor:'#F6DDCC',
   padding:'10px'
 }
@@ -109,30 +109,57 @@ class App extends React.Component {
 
       if ((i + 1) < appData.length && appData[i + 1].parent === id) {
         eArry.push(
-          <li ref={id} key={id}>
-            <span title={id} className="myCaret" onClick={(id) => this.setCSS(id)}>
-              <div title={id} value={row} className="btn btn-danger addBtnTop" onClick={(e) => this.showData(e)}>NO:{row}- P:{parent} id: {id}-- {caption}</div>
+          <li  value={id} ref={id} key={id} draggable="true" onDragStart={(e) => this.drag(e)} onDragOver={(e) => this.allowDrop(e)}  onDrop={(e)=>this.drop(e)}>
+            <span value={id} title={id} className="myCaret" onClick={(id) => this.setCSS(id)}>
+              <div  title={id} value={row} className="btn btn-danger addBtnTop" onClick={(e) => this.showData(e)}>NO:{row}- P:{parent} id: {id}-- {caption}</div>
             </span>
-            <ul id={id} ref={id} className={this.state.liCSS} data={text}>
+            <ul value={id} id={id} ref={id} className={this.state.liCSS} data={text}>
               {this.tree_(id, id)}
             </ul>
           </li>
         );
       } else {
         eArry.push(
-          <li key={id} data1={text}><span className="myCaret"></span>
-            <button id={id} type="button" className="btn btn-primary addBtnTop" onClick={(e) => this.showData(e)}>ID : {id} ; P : {parent} - {caption}</button>
+          <li value={id} draggable="true" onDragStart={(e) => this.drag(e)}  onDragOver={(e) => this.allowDrop(e)}  onDrop={(e)=>this.drop(e)}  key={id} data1={text}><span className="myCaret"></span>
+            <button title={id} id={id} type="button" className="btn btn-primary addBtnTop" onClick={(e) => this.showData(e)}>ID : {id} ; P : {parent} - {caption}</button>
           </li>);
       }
     }
     return eArry;
   }
+  allowDrop(e) {    
+    e.preventDefault();   
+  }
+  
+  drag(e){        
+    let id =  e.target.value;
+    e.dataTransfer.setData("text", id);
+  }
 
+  drop(e) {
+    e.preventDefault();
+    let parent= e.target.value;
+   
+    if(e.target.hasAttribute('title')){
+      parent =  e.target.title;
+     }else{
+      parent =  e.target.id;
+    }
+
+    let child = e.dataTransfer.getData("text");
+   // alert(parent +" - " +child);       
+    AppendChild(parent, child).then((serverData) => {
+      this.setState({ data: serverData.data })
+      store.dispatch({ type: 'set', payLoad: serverData.data });
+      })
+      .catch(err => console.log('There was an error:' + err));
+    //e.target.appendChild(document.getElementById(data));
+  }
   render() {
     console.log('render');
     return <div>
       <Nav />
-      <div style={styleLeft}>
+      <div title="0" style={styleLeft} onDragOver={(e) => this.allowDrop(e)}  onDrop={(e)=>this.drop(e)}>
         <ul className="myUL">
           {this.tree_(0, 0)}
         </ul>
