@@ -1,24 +1,31 @@
 import React from 'react';
 import Nav from './nav.js'
 import './css/App.css';
-import {Data, AppendChild} from './data.js';
+import {Data, changeParent} from './data.js';
 import { store } from './index.js';
-import { set_data } from './reducers/allReducers.js'
 
 const styleLeft = {
   float: 'left',
-  width: '30%',
+  width: '20%',
   backgroundColor:'#F6DDCC',
   overflow: 'auto',
-  height: '100vh'
+  height: '90vh'
 }
 const styleLeft2 = {
   float: 'left',
-  width: '68%',
+  width: '75%',
+  height:'90vh',
   marginTop: '0px',
   marginLeft: '0px',
   backgroundColor:'#F6DDCC',
   padding:'10px'
+}
+
+const myTextarea= {
+  height: '100%',
+  width: '100%',
+  backgroundColor:'#F6DDCC',
+  fontSize: '1.3em'
 }
 var appData;
 
@@ -47,41 +54,66 @@ class App extends React.Component {
   }
 
   setCSS(e) {
-    let id = e.target.title;
+    let id = e.target.lang;    
     console.log(id + "-" + document.getElementById(id).className);
     if (document.getElementById(id).className === 'nestedClosed') {
       document.getElementById(id).classList.remove('nestedClosed');
       document.getElementById(id).classList.add('nestedShow');
-      document.querySelector("[title='" + id + "']").classList.add('myCaret-down');
+      document.querySelector("[lang='" + id + "']").classList.add('myCaret-down');      
     } else {
       document.getElementById(id).classList.remove('nestedShow');
       document.getElementById(id).classList.add('nestedClosed');
-      document.querySelector("[title='" + id + "']").classList.remove('myCaret-down');
+      document.querySelector("[lang='" + id + "']").classList.remove('myCaret-down');
     }
   }
-  showData(e) {
+
+  showData(e) {    
     appData = this.state.data;
     let row =  e.target.value;
-    let id=-1;
-    if(e.target.hasAttribute('title')){
-       id =  e.target.title;
+    let id=-1;    
+    if(e.target.hasAttribute('lang')){
+       id =  e.target.lang;
     }else{
       id =  e.target.id;
     }
-    
-    let text="";
-    appData.forEach(element => {
-      if (element.id == id){
-        text =element.text;
+    //alert(id+ ' '+ store.getState().reduceData.activeElement);
+    if (store.getState().reduceData.activeElement>0){      
+      if(document.getElementById(store.getState().reduceData.activeElement).nodeName ==='BUTTON'){
+        document.getElementById(store.getState().reduceData.activeElement).classList.add('btn-primary');
+        document.getElementById(store.getState().reduceData.activeElement).classList.remove('btn-success');
       }
-    });       
-     document.getElementById('myText').innerText = text;
+      if(document.getElementById(store.getState().reduceData.activeElement).nodeName ==='UL'){
+        document.querySelector('[lang="'+store.getState().reduceData.activeElement+'"]').classList.remove('btn-success');
+        document.querySelector('[lang="'+store.getState().reduceData.activeElement+'"]').classList.add('btn-danger');     
+      }
+    }
+    if(document.getElementById(id).nodeName ==='BUTTON'){
+     document.getElementById(id).classList.remove('btn-primary');
+     document.getElementById(id).classList.remove('btn-danger');
+     document.getElementById(id).classList.add('btn-success');
+    }
+    if(document.getElementById(id).nodeName ==='UL'){
+      document.querySelector('[lang="'+id+'"]').classList.remove('btn-danger');
+      document.querySelector('[lang="'+id+'"]').classList.add('btn-success');     
+    }
+
+    alert(document.getElementById(id).nodeName);
+ 
+
+    let stext="";
+    appData.forEach(element => {
+      if (element.id === id){
+        stext =element.text;
+      }
+    });          
+   document.getElementById('myText').innerText = id+"--"+ stext;
+   stext = document.getElementById('myText').value;   
+   store.dispatch({ type: 'setElement', payLoad: id, text:stext});
   }
 
   query(parentRow, startRow) {
     let arrCh = [];
     appData = this.state.data;
-    //console.log('P:' + parentRow + ' ' + appData.length);
     for (let row1 = 0; row1 < appData.length; row1++) {
       if (Number(appData[row1].parent) === Number(parentRow)) {
         arrCh.push(
@@ -109,11 +141,11 @@ class App extends React.Component {
 
       if ((i + 1) < appData.length && appData[i + 1].parent === id) {
         eArry.push(
-          <li  value={id} ref={id} key={id} draggable="true" onDragStart={(e) => this.drag(e)} onDragOver={(e) => this.allowDrop(e)}  onDrop={(e)=>this.drop(e)}>
-            <span value={id} title={id} className="myCaret" onClick={(id) => this.setCSS(id)}>
-              <div  title={id} value={row} className="btn btn-danger addBtnTop" onClick={(e) => this.showData(e)}>NO:{row}- P:{parent} id: {id}-- {caption}</div>
+          <li  key={id} draggable="true" onDragStart={(e) => this.drag(e)} onDragOver={(e) => this.allowDrop(e)}  onDrop={(e)=>this.drop(e)}>
+            <span title={id} className="myCaret" onClick={(id) => this.setCSS(id)}>
+              <div  lang={id} value={row} className="btn btn-danger top10" onClick={(e) => this.showData(e)}>NO:{row}- P:{parent} id: {id}-- {caption}</div>
             </span>
-            <ul value={id} id={id} ref={id} className={this.state.liCSS} data={text}>
+            <ul id={id} ref={id} className={this.state.liCSS} data={text}>
               {this.tree_(id, id)}
             </ul>
           </li>
@@ -121,14 +153,14 @@ class App extends React.Component {
       } else {
         eArry.push(
           <li value={id} draggable="true" onDragStart={(e) => this.drag(e)}  onDragOver={(e) => this.allowDrop(e)}  onDrop={(e)=>this.drop(e)}  key={id} data1={text}><span className="myCaret"></span>
-            <button title={id} id={id} type="button" className="btn btn-primary addBtnTop" onClick={(e) => this.showData(e)}>ID : {id} ; P : {parent} - {caption}</button>
+            <button title={id} id={id} type="button" className="btn btn-primary top10" onClick={(e) => this.showData(e)}>ID : {id} ; P : {parent} - {caption}</button>
           </li>);
       }
     }
     return eArry;
   }
   allowDrop(e) {    
-    e.preventDefault();   
+    e.preventDefault();
   }
   
   drag(e){        
@@ -147,13 +179,11 @@ class App extends React.Component {
     }
 
     let child = e.dataTransfer.getData("text");
-   // alert(parent +" - " +child);       
-    AppendChild(parent, child).then((serverData) => {
+    changeParent(parent, child).then((serverData) => {
       this.setState({ data: serverData.data })
       store.dispatch({ type: 'set', payLoad: serverData.data });
       })
       .catch(err => console.log('There was an error:' + err));
-    //e.target.appendChild(document.getElementById(data));
   }
   render() {
     console.log('render');
@@ -164,7 +194,7 @@ class App extends React.Component {
           {this.tree_(0, 0)}
         </ul>
       </div>
-      <div id="myText" style={styleLeft2}></div>
+      <div  style={styleLeft2}><textarea id="myText" style={myTextarea} rows="4" cols="50"/></div>
     </div>
   };
 }
