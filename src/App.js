@@ -97,7 +97,7 @@ class App extends React.Component {
       document.querySelector('[lang="'+id+'"]').classList.add('btn-success');     
     }
 
-    alert(document.getElementById(id).nodeName);
+    //alert(document.getElementById(id).nodeName);
  
 
     let stext="";
@@ -106,7 +106,7 @@ class App extends React.Component {
         stext =element.text;
       }
     });          
-   document.getElementById('myText').innerText = id+"--"+ stext;
+   document.getElementById('myText').innerText = stext;
    stext = document.getElementById('myText').value;   
    store.dispatch({ type: 'setElement', payLoad: id, text:stext});
   }
@@ -170,12 +170,16 @@ class App extends React.Component {
 
   drop(e) {
     e.preventDefault();
-    let parent= e.target.value;
-   
+    e.stopPropagation();
+    let parent= e.target.value;   
     if(e.target.hasAttribute('title')){
       parent =  e.target.title;
-     }else{
+      alert(parent);
+     }else if(e.target.hasAttribute('lang')){
+      parent =  e.target.lang;      
+    }else{
       parent =  e.target.id;
+      alert('id:'+parent);
     }
 
     let child = e.dataTransfer.getData("text");
