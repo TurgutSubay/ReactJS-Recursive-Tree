@@ -6,26 +6,36 @@ import { store } from './index.js';
 
 const styleLeft = {
   float: 'left',
-  width: '20%',
-  backgroundColor:'#F6DDCC',
+  width: '25%',
+  backgroundColor:'#333',
   overflow: 'auto',
   height: '90vh'
 }
 const styleLeft2 = {
   float: 'left',
-  width: '75%',
+  width: '60%',
   height:'90vh',
   marginTop: '0px',
   marginLeft: '0px',
-  backgroundColor:'#F6DDCC',
+  backgroundColor:'#333',
+  padding:'10px'
+}
+const styleLeft3 = {
+  float: 'left',
+  width: '14%',
+  height:'90vh',
+  marginTop: '0px',
+  marginLeft: '0px',
+  backgroundColor:'#333',
   padding:'10px'
 }
 
 const myTextarea= {
   height: '100%',
   width: '100%',
-  backgroundColor:'#F6DDCC',
-  fontSize: '1.3em'
+  backgroundColor:'#222',
+  fontSize: '1.3em',
+  color:'#ccc'
 }
 var appData;
 
@@ -76,7 +86,7 @@ class App extends React.Component {
     }else{
       id =  e.target.id;
     }
-    //alert(id+ ' '+ store.getState().reduceData.activeElement);
+    
     if (store.getState().reduceData.activeElement>0){      
       if(document.getElementById(store.getState().reduceData.activeElement).nodeName ==='BUTTON'){
         document.getElementById(store.getState().reduceData.activeElement).classList.add('btn-primary');
@@ -96,17 +106,14 @@ class App extends React.Component {
       document.querySelector('[lang="'+id+'"]').classList.remove('btn-danger');
       document.querySelector('[lang="'+id+'"]').classList.add('btn-success');     
     }
-
-    //alert(document.getElementById(id).nodeName);
- 
-
+   
     let stext="";
     appData.forEach(element => {
       if (element.id === id){
         stext =element.text;
       }
     });          
-   document.getElementById('myText').innerText = stext;
+   document.getElementById('myText').innerHTML = stext;
    stext = document.getElementById('myText').value;   
    store.dispatch({ type: 'setElement', payLoad: id, text:stext});
   }
@@ -143,7 +150,7 @@ class App extends React.Component {
         eArry.push(
           <li  key={id} draggable="true" onDragStart={(e) => this.drag(e)} onDragOver={(e) => this.allowDrop(e)}  onDrop={(e)=>this.drop(e)}>
             <span title={id} className="myCaret" onClick={(id) => this.setCSS(id)}>
-              <div  lang={id} value={row} className="btn btn-danger top10" onClick={(e) => this.showData(e)}>NO:{row}- P:{parent} id: {id}-- {caption}</div>
+              <div  lang={id} value={row} className="btn btn-danger top10" onClick={(e) => this.showData(e)}>{caption}</div>
             </span>
             <ul id={id} ref={id} className={this.state.liCSS} data={text}>
               {this.tree_(id, id)}
@@ -153,7 +160,7 @@ class App extends React.Component {
       } else {
         eArry.push(
           <li value={id} draggable="true" onDragStart={(e) => this.drag(e)}  onDragOver={(e) => this.allowDrop(e)}  onDrop={(e)=>this.drop(e)}  key={id} data1={text}><span className="myCaret"></span>
-            <button title={id} id={id} type="button" className="btn btn-primary top10" onClick={(e) => this.showData(e)}>ID : {id} ; P : {parent} - {caption}</button>
+            <button title={id} id={id} type="button" className="btn btn-primary top10" onClick={(e) => this.showData(e)}>{caption}</button>
           </li>);
       }
     }
@@ -199,6 +206,7 @@ class App extends React.Component {
         </ul>
       </div>
       <div  style={styleLeft2}><textarea id="myText" style={myTextarea} rows="4" cols="50"/></div>
+      <div  style={styleLeft3}>sss</div>
     </div>
   };
 }
