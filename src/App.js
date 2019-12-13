@@ -3,6 +3,7 @@ import Nav from './nav.js'
 import './css/App.css';
 import {Data, changeParent} from './data.js';
 import { store } from './index.js';
+import  RightSide from './rightSide';
 
 const styleLeft = {
   float: 'left',
@@ -14,15 +15,6 @@ const styleLeft = {
 const styleLeft2 = {
   float: 'left',
   width: '60%',
-  height:'90vh',
-  marginTop: '0px',
-  marginLeft: '0px',
-  backgroundColor:'#333',
-  padding:'10px'
-}
-const styleLeft3 = {
-  float: 'left',
-  width: '14%',
   height:'90vh',
   marginTop: '0px',
   marginLeft: '0px',
@@ -49,11 +41,7 @@ class App extends React.Component {
       listLi: []
     }
   }
-
-  myfetch(mydata) {
-    this.setState({ data: mydata });
-  }
-
+ 
   componentDidMount() {
     Data('user').then((serverData) => {
       this.setState({ data: serverData.data })
@@ -78,8 +66,7 @@ class App extends React.Component {
   }
 
   showData(e) {    
-    appData = this.state.data;
-    let row =  e.target.value;
+    appData = this.state.data;  
     let id=-1;    
     if(e.target.hasAttribute('lang')){
        id =  e.target.lang;
@@ -115,7 +102,11 @@ class App extends React.Component {
     });          
    document.getElementById('myText').innerHTML = stext;
    stext = document.getElementById('myText').value;   
-   store.dispatch({ type: 'setElement', payLoad: id, text:stext});
+   let parent = -1;
+   if(e.target.hasAttribute('parent')){
+     parent = e.target.getAttribute('parent');    
+   }
+   store.dispatch({ type: 'setElement', payLoad: id, parents:parent ,text:stext});
   }
 
   query(parentRow, startRow) {
@@ -149,8 +140,8 @@ class App extends React.Component {
       if ((i + 1) < appData.length && appData[i + 1].parent === id) {
         eArry.push(
           <li  key={id} draggable="true" onDragStart={(e) => this.drag(e)} onDragOver={(e) => this.allowDrop(e)}  onDrop={(e)=>this.drop(e)}>
-            <span title={id} className="myCaret" onClick={(id) => this.setCSS(id)}>
-              <div  lang={id} value={row} className="btn btn-danger top10" onClick={(e) => this.showData(e)}>{caption}</div>
+            <span myDrop={id}  className="myCaret" onClick={(id) => this.setCSS(id)}>
+              <div  lang={id} parent={parent} value={row} className="btn btn-danger top10" onClick={(e) => this.showData(e)}>{caption}</div>
             </span>
             <ul id={id} ref={id} className={this.state.liCSS} data={text}>
               {this.tree_(id, id)}
@@ -159,8 +150,8 @@ class App extends React.Component {
         );
       } else {
         eArry.push(
-          <li value={id} draggable="true" onDragStart={(e) => this.drag(e)}  onDragOver={(e) => this.allowDrop(e)}  onDrop={(e)=>this.drop(e)}  key={id} data1={text}><span className="myCaret"></span>
-            <button title={id} id={id} type="button" className="btn btn-primary top10" onClick={(e) => this.showData(e)}>{caption}</button>
+          <li value={id} draggable="true" parent={parent} onDragStart={(e) => this.drag(e)}  onDragOver={(e) => this.allowDrop(e)}  onDrop={(e)=>this.drop(e)}  key={id} data1={text}><span className="myCaret"></span>
+            <button id={id} parent={parent} type="button" className="btn btn-primary top10" onClick={(e) => this.showData(e)}>{caption}</button>
           </li>);
       }
     }
@@ -179,9 +170,9 @@ class App extends React.Component {
     e.preventDefault();
     e.stopPropagation();
     let parent= e.target.value;   
-    if(e.target.hasAttribute('title')){
-      parent =  e.target.title;
-      alert(parent);
+    if(e.target.hasAttribute('myDrop')){   
+      parent = e.target.getAttribute('myDrop');    
+     alert(parent);
      }else if(e.target.hasAttribute('lang')){
       parent =  e.target.lang;      
     }else{
@@ -200,13 +191,13 @@ class App extends React.Component {
     console.log('render');
     return <div>
       <Nav />
-      <div title="0" style={styleLeft} onDragOver={(e) => this.allowDrop(e)}  onDrop={(e)=>this.drop(e)}>
+      <div myDrop="0" style={styleLeft} onDragOver={(e) => this.allowDrop(e)}  onDrop={(e)=>this.drop(e)}>
         <ul className="myUL">
           {this.tree_(0, 0)}
         </ul>
       </div>
       <div  style={styleLeft2}><textarea id="myText" style={myTextarea} rows="4" cols="50"/></div>
-      <div  style={styleLeft3}>sss</div>
+      <RightSide/>
     </div>
   };
 }

@@ -2,7 +2,8 @@ import  {combineReducers} from 'redux';
 
 let init= {
    data:[],
-   activeElement:0,
+   parents:-1,
+   activeElement:-1,
    text:'',
    log:false
 }
@@ -16,6 +17,7 @@ const dataR = (state=init,action) => {
         case 'setElement':  const newS = {
             ...newState,
             activeElement :action.payLoad,
+            parents : action.parents,
             text : action.text
         } 
         return newS;
@@ -30,10 +32,11 @@ export const set_data = (nr) => {
     }
 }
 
-export const set_activeElement = (nr,text) => {
+export const set_activeElement = (nr,text,parent) => {
     return {
         type: 'setElement',
         payLoad: nr,
+        parent: parent,    
         text:text
     }
 }
