@@ -8,15 +8,15 @@ $arry = [];
 $dir = 'sqlite:./serverNots.sqlite';
 
 $id = -1;
-if (isset($_GET['id'])) {
-    $id = $_GET['id'];
+if (isset($_POST['id'])) {
+    $id = $_POST['id'];
 } else {
     $res = array('result' => 'FALSE', 'data' => '');
     echo json_encode($res);
 }
 $text = '';
-if (isset($_GET['text'])) {
-    $text = $_GET['text'];
+if (isset($_POST['text'])) {
+    $text = $_POST['text'];
 } else {
     $res = array('result' => 'FALSE', 'data' => '');
     echo json_encode($res);

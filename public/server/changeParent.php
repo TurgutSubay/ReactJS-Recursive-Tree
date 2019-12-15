@@ -8,13 +8,13 @@ $arry = [];
 $dir = 'sqlite:./serverNots.sqlite';
 
 $parent = -1;
-if (isset($_GET['parent'])) {
-    $parent = $_GET['parent'];
+if (isset($_POST['parent'])) {
+    $parent = $_POST['parent'];
 }
 
 $child = -1;
-if (isset($_GET['child'])) {
-    $child = $_GET['child'];
+if (isset($_POST['child'])) {
+    $child = $_POST['child'];
 }
 
 if ($parent > -1 && $child > -1) {

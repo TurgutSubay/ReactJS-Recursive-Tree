@@ -7,7 +7,7 @@ import  RightSide from './rightSide';
 
 const styleLeft = {
   float: 'left',
-  width: '25%',
+  width: '20%',
   backgroundColor:'#333',
   overflow: 'auto',
   height: '90vh'

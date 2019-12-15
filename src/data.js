@@ -25,9 +25,9 @@ export function Data(){
 
 export function changeParent(parent, child){
   return new Promise(function(resolve, reject){        
-    fetch('http://localhost/react/reactjs-recursive-tree/public/server/changeParent.php?parent='+parent+'&child='+child,
+    fetch('http://localhost/react/reactjs-recursive-tree/public/server/changeParent.php',
     {
-          method: "GET",
+          method: "POST",
           cache: 'no-cache',               
           credentials: 'same-origin', 
           redirect: 'follow', 
@@ -36,7 +36,7 @@ export function changeParent(parent, child){
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded'               
           },   
-         // body:  'parent='+ parent + '&child=' +  child           
+          body:  'parent='+ parent + '&child=' +  child           
     })
     .then(response => response.json())
     .then(response=> {            
@@ -75,9 +75,9 @@ export function addChild(parent, text,caption){
 
 export function updataTextData(id, text){
   return new Promise(function(resolve, reject){        
-    fetch('http://localhost/react/reactjs-recursive-tree/public/server/updateText.php?id='+id+'&text='+text,
+    fetch('http://localhost/react/reactjs-recursive-tree/public/server/updateText.php?',
     {
-          method: "GET",
+          method: "POST",
           cache: 'no-cache',               
           credentials: 'same-origin', 
           redirect: 'follow', 
@@ -86,7 +86,7 @@ export function updataTextData(id, text){
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded'               
           },   
-         // body:  'parent='+ parent + '&child=' +  child           
+          body:  'id='+ id + '&text=' +  text           
     })
     .then(response => response.json())
     .then(response=> {            

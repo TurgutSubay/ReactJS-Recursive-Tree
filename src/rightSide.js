@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 
 const leftSide = {
     float: 'left',
-    width: '14%',
+    width: '20%',
     height:'90vh',
     marginTop: '0px',
     marginLeft: '0px',
