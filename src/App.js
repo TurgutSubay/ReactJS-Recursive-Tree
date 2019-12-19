@@ -4,6 +4,8 @@ import './css/App.css';
 import {Data, changeParent} from './data.js';
 import { store } from './index.js';
 import  RightSide from './rightSide';
+import {myTextarea} from './globalVariables';
+import {connect} from 'react-redux';
 
 const styleLeft = {
   float: 'left',
@@ -22,13 +24,6 @@ const styleLeft2 = {
   padding:'10px'
 }
 
-const myTextarea= {
-  height: '100%',
-  width: '100%',
-  backgroundColor:'#222',
-  fontSize: '1.3em',
-  color:'#ccc'
-}
 var appData;
 
 class App extends React.Component {
@@ -38,7 +33,7 @@ class App extends React.Component {
     this.state = {
       data: [],
       liCSS: 'nestedClosed',
-      listLi: []
+      listLi: []          
     }
   }
  
@@ -187,8 +182,9 @@ class App extends React.Component {
       })
       .catch(err => console.log('There was an error:' + err));
   }
+   
   render() {
-    console.log('render');
+    console.log('render');   
     return <div>
       <Nav />
       <div myDrop="0" style={styleLeft} onDragOver={(e) => this.allowDrop(e)}  onDrop={(e)=>this.drop(e)}>
@@ -196,9 +192,16 @@ class App extends React.Component {
           {this.tree_(0, 0)}
         </ul>
       </div>
-      <div  style={styleLeft2}><textarea id="myText" style={myTextarea} rows="4" cols="50"/></div>
+      <div  style={styleLeft2}><textarea id="myText" style={this.props.myTextarea} rows="4" cols="50"/></div>
       <RightSide/>
     </div>
   };
 }
-export default App;
+
+function mapStateToProps(state) {  
+  return {
+    myTextarea:state.reduceData.myTextarea
+  }
+}
+
+export default connect(mapStateToProps) (App);

@@ -5,6 +5,13 @@ let init= {
    parents:-1,
    activeElement:-1,
    text:'',
+   myTextarea: {
+    height: '100%',
+    width: '100%',
+    backgroundColor:'#222',
+    fontSize: '18px',
+    color:'#ccc'
+  },
    log:false
 }
    
@@ -21,7 +28,17 @@ const dataR = (state=init,action) => {
             text : action.text
         } 
         return newS;
-        default: return  newState;        
+        case 'textSizeUpDown':
+            const newO = {
+                height: '100%',
+                width: '100%',
+                backgroundColor:'#222',
+                color:'#ccc'
+            }
+            newO.fontSize= action.payLoad +'px';
+            newState.myTextarea = newO;            
+        return newState;
+        default: return  newState;
     }
 }
 

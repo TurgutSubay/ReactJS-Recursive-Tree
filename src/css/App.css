@@ -15,8 +15,6 @@ ul{
 .myCaret {
   cursor: pointer;
   user-select: none; /* Prevent text selection */
-  
-  
   -webkit-user-select: none; /* Safari 3.1+ */
   -moz-user-select: none; /* Firefox 2+ */
   -ms-user-select: none; /* IE 10+ */
@@ -34,12 +32,11 @@ ul{
  -ms-transform: rotate(90deg); /* IE 9 */
  -webkit-transform: rotate(90deg); /* Safari */
  margin-right: 10px;
- transform: rotate(90deg);  
-
+ transform: rotate(90deg);
 }
 
 .nestedClosed {
-  display: none; 
+  display: none;
 }
 
 /* Show the nested list when the user clicks on the caret/arrow (with JavaScript) */
