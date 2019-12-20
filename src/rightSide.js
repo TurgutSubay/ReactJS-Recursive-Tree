@@ -1,5 +1,4 @@
 import React from 'react'
-import {store} from './index';
 import {connect} from 'react-redux';
 
 const leftSide = {
@@ -15,7 +14,6 @@ const leftSide = {
 const tNbr={
     width: '70px',
     color:'black'
-
 }
 
 class RightSide extends React.Component {
@@ -31,7 +29,7 @@ class RightSide extends React.Component {
       return <div style={leftSide}>                
           <div>Active Element: {this.props.id}</div> 
           <div>Active Parent : {this.props.parent}</div>
-          <div>Text Size: <input type="number" style={tNbr} name="quantity" min="10" max="50"  class="form-control"
+          <div>Text Size: <input type="number" style={tNbr} name="quantity" min="10" max="50"  className="form-control"
            value={this.state.text}
            onChange={e => this.textSize(e)}/> 
            </div>

@@ -15,7 +15,7 @@ export function Data(){
         .then(response => response.json())
         .then(response=> {            
             resolve(response);        
-            console.log(response );
+            console.log('Data response:'+response );            
           })
         .catch(xx =>{           
             console.log(xx);
@@ -41,7 +41,7 @@ export function changeParent(parent, child){
     .then(response => response.json())
     .then(response=> {            
         resolve(response);        
-        console.log(response );
+        console.log('changeParent:'+response );
       })
     .catch(xx =>{           
         console.log(xx);
@@ -65,7 +65,7 @@ export function addChild(parent, text,caption){
     .then(response => response.json())
     .then(response=> {            
         resolve(response);        
-        console.log(response );
+        console.log('addChild:'+response );
       })
     .catch(xx =>{           
         console.log(xx);
@@ -75,7 +75,7 @@ export function addChild(parent, text,caption){
 
 export function updataTextData(id, text){
   return new Promise(function(resolve, reject){        
-    fetch('http://localhost/react/reactjs-recursive-tree/public/server/updateText.php?',
+    fetch('http://localhost/react/reactjs-recursive-tree/public/server/updateText.php',
     {
           method: "POST",
           cache: 'no-cache',               
@@ -91,7 +91,7 @@ export function updataTextData(id, text){
     .then(response => response.json())
     .then(response=> {            
         resolve(response);        
-        console.log(response );
+        console.log('updataTextData:'+response );
       })
     .catch(xx =>{           
         console.log(xx);
@@ -117,7 +117,7 @@ export function deleteData(id){
     .then(response => response.json())
     .then(response=> {            
         resolve(response);        
-        console.log(response );
+        console.log('deleteData:'+response );
       })
     .catch(xx =>{           
         console.log(xx);

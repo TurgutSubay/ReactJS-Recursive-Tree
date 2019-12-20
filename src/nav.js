@@ -6,10 +6,10 @@ const addCSS={
   'backgroundColor' : '#ccc' 
 }
 
-const AddElement = ()=>{    
+const AddElement = ()=>{
   let parent = store.getState().reduceData.activeElement; 
   document.getElementById("aaa").innerText= parent;
-  let sText = document.getElementById('myText').value;  
+  let sText = document.getElementById('myText').value;
   let sCaption = document.getElementById('myCaption').value;
   if (sCaption.length<1){
     alert(parent + ' ' + sCaption);
@@ -17,22 +17,22 @@ const AddElement = ()=>{
   addChild(parent, sText, sCaption)
   .then((serverData) => {
     alert(serverData.data);
-    store.dispatch({ type: 'set', payLoad: serverData.data});
+    store.dispatch({type: 'set', payLoad: serverData.data});
     })
-  .catch(err => console.log('There was an error:' + err)); 
+  .catch(err => console.log('There was an error:' + err));
   }
 }
 
 const updateText = (e)=>{
   e.stopPropagation();
-  let sText = document.getElementById('myText').value;  
+  let sText = document.getElementById('myText').value;
   let id = store.getState().reduceData.activeElement;
   updataTextData(id, sText)
-  .then((serverData) => {  
-    store.dispatch({ type: 'set', payLoad: serverData.data});
+  .then((serverData) => {
+    store.dispatch({ type: 'set', payLoad: serverData.data});    
     })
-  .catch(err => console.log('There was an error:' + err));
-} 
+  .catch(err => console.log('There was an error:' + err));  
+ }
 
 const deleteText = (e)=>{
   e.stopPropagation();

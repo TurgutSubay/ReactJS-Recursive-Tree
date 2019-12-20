@@ -38,6 +38,9 @@ const dataR = (state=init,action) => {
             newO.fontSize= action.payLoad +'px';
             newState.myTextarea = newO;            
         return newState;
+        case 'setText': 
+        newState.text = action.text; 
+        return newState;
         default: return  newState;
     }
 }

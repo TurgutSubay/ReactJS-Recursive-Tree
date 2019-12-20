@@ -4,7 +4,6 @@ import './css/App.css';
 import {Data, changeParent} from './data.js';
 import { store } from './index.js';
 import  RightSide from './rightSide';
-import {myTextarea} from './globalVariables';
 import {connect} from 'react-redux';
 
 const styleLeft = {
@@ -33,8 +32,10 @@ class App extends React.Component {
     this.state = {
       data: [],
       liCSS: 'nestedClosed',
-      listLi: []          
+      listLi: [],
+      text:""      
     }
+    this.myRef = React.createRef();
   }
  
   componentDidMount() {
@@ -42,8 +43,8 @@ class App extends React.Component {
       this.setState({ data: serverData.data })
       store.dispatch({ type: 'set', payLoad: serverData.data });
       })
-      .catch(err => console.log('There was an error:' + err));
-    console.log('componentDidMount');
+      .catch(err => console.log('There was an error:' + err));   
+    console.log('App componentDidMount');
   }
 
   setCSS(e) {
@@ -95,8 +96,9 @@ class App extends React.Component {
         stext =element.text;
       }
     });          
-   document.getElementById('myText').innerHTML = stext;
-   stext = document.getElementById('myText').value;   
+   
+   let  node = this.myRef.current;
+   node.value = stext;
    let parent = -1;
    if(e.target.hasAttribute('parent')){
      parent = e.target.getAttribute('parent');    
@@ -182,9 +184,14 @@ class App extends React.Component {
       })
       .catch(err => console.log('There was an error:' + err));
   }
-   
+
+  myTextChange(e){   
+   let stext = document.getElementById('myText').value;     
+    store.dispatch({ type: 'setText', text:stext});
+  }
+
   render() {
-    console.log('render');   
+    console.log('App: render');   
     return <div>
       <Nav />
       <div myDrop="0" style={styleLeft} onDragOver={(e) => this.allowDrop(e)}  onDrop={(e)=>this.drop(e)}>
@@ -192,7 +199,7 @@ class App extends React.Component {
           {this.tree_(0, 0)}
         </ul>
       </div>
-      <div  style={styleLeft2}><textarea id="myText" style={this.props.myTextarea} rows="4" cols="50"/></div>
+      <div  style={styleLeft2}><textarea ref={this.myRef} id="myText" style={this.props.myTextarea} onKeyUp={(e) => this.myTextChange(e)} rows="4" cols="50"/></div>
       <RightSide/>
     </div>
   };
@@ -200,7 +207,8 @@ class App extends React.Component {
 
 function mapStateToProps(state) {  
   return {
-    myTextarea:state.reduceData.myTextarea
+    myTextarea:state.reduceData.myTextarea,
+    text :state.reduceData.text
   }
 }
 
