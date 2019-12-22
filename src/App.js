@@ -63,6 +63,7 @@ class App extends React.Component {
 
   showData(e) {    
     appData = this.state.data;  
+    appData = this.props.data;
     let id=-1;    
     if(e.target.hasAttribute('lang')){
        id =  e.target.lang;
@@ -186,8 +187,8 @@ class App extends React.Component {
   }
 
   myTextChange(e){   
-   let stext = document.getElementById('myText').value;     
-    store.dispatch({ type: 'setText', text:stext});
+    let stext = this.myRef.current.value;
+   store.dispatch({ type: 'setText', text:stext,id:this.props.id});
   }
 
   render() {
@@ -208,7 +209,9 @@ class App extends React.Component {
 function mapStateToProps(state) {  
   return {
     myTextarea:state.reduceData.myTextarea,
-    text :state.reduceData.text
+    text :state.reduceData.text,
+    id: state.reduceData.activeElement,
+    data:state.reduceData.data
   }
 }
 

@@ -19,7 +19,7 @@ const dataR = (state=init,action) => {
     const newState = {...state};
 
     switch(action.type){
-        case 'set':  state.data = action.payLoad;  return newState;
+        case 'set':  newState.data = action.payLoad;  return newState;
         case 'get': return newState;
         case 'setElement':  const newS = {
             ...newState,
@@ -38,7 +38,13 @@ const dataR = (state=init,action) => {
             newO.fontSize= action.payLoad +'px';
             newState.myTextarea = newO;            
         return newState;
-        case 'setText': 
+        case 'setText':        
+        newState.data.forEach(element => {
+            if (element.id === action.id){
+              element.text=action.text;
+            }
+          });          
+       
         newState.text = action.text; 
         return newState;
         default: return  newState;
