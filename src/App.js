@@ -1,30 +1,30 @@
 import React from 'react';
 import Nav from './nav.js'
 import './css/App.css';
-import {Data, changeParent} from './data.js';
+import { Data, changeParent } from './data.js';
 import { store } from './index.js';
-import  RightSide from './rightSide';
-import {connect} from 'react-redux';
+import RightSide from './rightSide';
+import { connect } from 'react-redux';
 
 const styleLeft = {
   float: 'left',
   width: '20%',
-  backgroundColor:'#333',
+  backgroundColor: '#333',
   overflow: 'auto',
   height: '90vh'
 }
 const styleLeft2 = {
   float: 'left',
   width: '60%',
-  height:'90vh',
+  height: '90vh',
   marginTop: '0px',
   marginLeft: '0px',
-  backgroundColor:'#333',
-  padding:'10px'
+  backgroundColor: '#333',
+  padding: '10px'
 }
 
 var appData;
-var myRefArr=[];
+var myRefArr = [];
 
 class App extends React.Component {
 
@@ -34,36 +34,36 @@ class App extends React.Component {
       data: [],
       liCSS: 'nestedClosed',
       listLi: [],
-      text:"",
-      myRefArr:[],
-      ii:0
+      text: "",
+      myRefArr: [],
+      ii: 0
     }
     this.myRef = React.createRef();
   }
-  refCreate(id){
-   //this.state.myRefArr[id] = React.createRef();
-   myRefArr[id] = React.createRef();
+  refCreate(id) {
+    //this.state.myRefArr[id] = React.createRef();
+    myRefArr[id] = React.createRef();
   }
 
   componentDidMount() {
     this.refCreate(this.state.ii);
-    this.state.ii = this.state.ii +1;
+    this.state.ii = this.state.ii + 1;
     Data('user').then((serverData) => {
       this.setState({ data: serverData.data })
       store.dispatch({ type: 'set', payLoad: serverData.data });
-      })
-      .catch(err => console.log('There was an error:' + err));   
+    })
+      .catch(err => console.log('There was an error:' + err));
     console.log('App componentDidMount');
   }
 
   setCSS(e) {
-    let id = e.target.id;  
+    let id = e.target.id;
     //alert('setCSS'+id)  
     console.log(id + "-" + myRefArr[id].current.className);// document.getElementById(id).className);
-    if ( myRefArr[id].current.className === 'nestedClosed') {
+    if (myRefArr[id].current.className === 'nestedClosed') {
       myRefArr[id].current.classList.remove('nestedClosed');
       myRefArr[id].current.classList.add('nestedShow');
-      document.getElementById(id).classList.add('myCaret-down');      
+      document.getElementById(id).classList.add('myCaret-down');
     } else {
       myRefArr[id].current.classList.remove('nestedShow');
       myRefArr[id].current.classList.add('nestedClosed');
@@ -71,46 +71,46 @@ class App extends React.Component {
     }
   }
 
-  showData(e) {    
-    appData = this.state.data;  
+  showData(e) {
+    appData = this.state.data;
     appData = this.props.data;
-    let id=-1;    
-    id =  e.target.id;   
-   
-    if (this.props.activeElement>0){      
-       if(myRefArr[this.props.activeElement].current.nodeName ==='BUTTON'){
-          myRefArr[this.props.activeElement].current.classList.add('btn-primary');
-          myRefArr[this.props.activeElement].current.classList.remove('btn-success');
-        }
-      if(myRefArr[this.props.activeElement].current.nodeName ==='UL'){
-        document.getElementById(this.props.activeElement).classList.add('btn-danger'); 
-        document.getElementById(this.props.activeElement).classList.remove('btn-success'); 
+    let id = -1;
+    id = e.target.id;
+
+    if (this.props.activeElement > 0) {
+      if (myRefArr[this.props.activeElement].current.nodeName === 'BUTTON') {
+        myRefArr[this.props.activeElement].current.classList.add('btn-primary');
+        myRefArr[this.props.activeElement].current.classList.remove('btn-success');
+      }
+      if (myRefArr[this.props.activeElement].current.nodeName === 'UL') {
+        document.getElementById(this.props.activeElement).classList.add('btn-danger');
+        document.getElementById(this.props.activeElement).classList.remove('btn-success');
       }
     }
-    if(myRefArr[id].current.nodeName ==='BUTTON'){
+    if (myRefArr[id].current.nodeName === 'BUTTON') {
       myRefArr[id].current.classList.remove('btn-primary');
       myRefArr[id].current.classList.remove('btn-danger');
       myRefArr[id].current.classList.add('btn-success');
     }
-    if(myRefArr[id].current.nodeName ==='UL'){
-      document.getElementById(id).classList.remove('btn-danger'); 
-      document.getElementById(id).classList.add('btn-success'); 
+    if (myRefArr[id].current.nodeName === 'UL') {
+      document.getElementById(id).classList.remove('btn-danger');
+      document.getElementById(id).classList.add('btn-success');
     }
-   
-    let stext="";
+
+    let stext = "";
     appData.forEach(element => {
-      if (element.id === id){
-        stext =element.text;
+      if (element.id === id) {
+        stext = element.text;
       }
-    });          
+    });
     // 
-   let  node = myRefArr[0].current;//this.myRef.current;
-   node.value = stext;
-   let parent = -1;
-   if(e.target.hasAttribute('parent')){
-     parent = e.target.getAttribute('parent');    
-   }
-   store.dispatch({ type: 'setElement', payLoad: id, parents:parent ,text:stext});
+    let node = myRefArr[0].current;//this.myRef.current;
+    node.value = stext;
+    let parent = -1;
+    if (e.target.hasAttribute('parent')) {
+      parent = e.target.getAttribute('parent');
+    }
+    store.dispatch({ type: 'setElement', payLoad: id, parents: parent, text: stext });
   }
 
   query(parentRow, startRow) {
@@ -144,9 +144,9 @@ class App extends React.Component {
 
       if ((i + 1) < appData.length && appData[i + 1].parent === id) {
         eArry.push(
-          <li  key={id} draggable="true" onDragStart={(e) => this.drag(e)} onDragOver={(e) => this.allowDrop(e)}  onDrop={(e)=>this.drop(e)}>
-            <span myDrop={id}  className="myCaret" onClick={(id) => this.setCSS(id)}>
-              <div id={id}  parent={parent} value={row} className="btn btn-danger top10" onClick={(e) => this.showData(e)}>{caption}</div>
+          <li key={id} draggable="true" onDragStart={(e) => this.drag(e)} onDragOver={(e) => this.allowDrop(e)} onDrop={(e) => this.drop(e)}>
+            <span myDrop={id} className="myCaret" onClick={(id) => this.setCSS(id)}>
+              <div id={id} parent={parent} value={row} className="btn btn-danger top10" onClick={(e) => this.showData(e)}>{caption}</div>
             </span>
             <ul ref={myRefArr[id]} className={this.state.liCSS} data={text}>
               {this.tree_(id, id)}
@@ -155,72 +155,78 @@ class App extends React.Component {
         );
       } else {
         eArry.push(
-          <li value={id} draggable="true" parent={parent} onDragStart={(e) => this.drag(e)}  onDragOver={(e) => this.allowDrop(e)}  onDrop={(e)=>this.drop(e)}  key={id} data1={text}><span className="myCaret"></span>
+          <li value={id} draggable="true" parent={parent} onDragStart={(e) => this.drag(e)} onDragOver={(e) => this.allowDrop(e)} onDrop={(e) => this.drop(e)} key={id} data1={text}><span className="myCaret"></span>
             <button ref={myRefArr[id]} id={id} parent={parent} type="button" className="btn btn-primary top10" onClick={(e) => this.showData(e)}>{caption}</button>
           </li>);
       }
     }
     return eArry;
   }
-  allowDrop(e) {    
-    e.preventDefault();
+  allowDrop(e) {
+    document.getElementById('myCaption').value=e.target.nodeName;
+    if(e.target.nodeName === "BUTTON" || e.target.nodeName === "DIV"){
+      e.preventDefault();  
+    }else{
+      return
+    }
   }
-  
-  drag(e){        
-    let id =  e.target.value;
+
+  drag(e) {
+    let id = e.target.value;
     e.dataTransfer.setData("text", id);
   }
 
   drop(e) {
     e.preventDefault();
     e.stopPropagation();
-    let parent= e.target.value;   
-    if(e.target.hasAttribute('myDrop')){   
-      parent = e.target.getAttribute('myDrop');    
-     alert(parent);
-     }else if(e.target.hasAttribute('lang')){
-      parent =  e.target.lang;      
-    }else{
-      parent =  e.target.id;
-      alert('id:'+parent);
+    let parent = e.target.value;
+    if (e.target.hasAttribute('myDrop')) {
+      parent = e.target.getAttribute('myDrop');
+      alert(parent);
+    } else if (e.target.hasAttribute('lang')) {
+      parent = e.target.lang;
+    } else {
+      parent = e.target.id;
+      alert('Parent id:' + parent);
     }
-
     let child = e.dataTransfer.getData("text");
-    changeParent(parent, child).then((serverData) => {
-      this.setState({ data: serverData.data })
-      store.dispatch({ type: 'set', payLoad: serverData.data });
+    if (parent != child) {
+      changeParent(parent, child).then((serverData) => {
+        this.setState({ data: serverData.data })
+        store.dispatch({ type: 'set', payLoad: serverData.data });
       })
-      .catch(err => console.log('There was an error:' + err));
+        .catch(err => console.log('There was an error:' + err));
+    }
   }
 
-  myTextChange(e){   
+  myTextChange(e) {
     let stext = myRefArr[0].current.value;//this.myRef.current.value;
-   store.dispatch({ type: 'setText', text:stext,id:this.props.id});
+    store.dispatch({ type: 'setText', text: stext, id: this.props.id });
   }
 
   render() {
-    console.log('App: render');   
+    console.log('App: render');
     return <div>
       <Nav />
-      <div myDrop="0" style={styleLeft} onDragOver={(e) => this.allowDrop(e)}  onDrop={(e)=>this.drop(e)}>
+      <div myDrop="0" style={styleLeft} onDragOver={(e) => this.allowDrop(e)} onDrop={(e) => this.drop(e)}>
         <ul className="myUL">
           {this.tree_(0, 0)}
         </ul>
       </div>
-      <div  style={styleLeft2}><textarea ref={myRefArr[0]} id="myText" style={this.props.myTextarea} onKeyUp={(e) => this.myTextChange(e)} rows="4" cols="50"/></div>
-      <RightSide/>
+      <div style={styleLeft2}><textarea ref={myRefArr[0]} id="myText" style={this.props.myTextarea} onKeyUp={(e) => this.myTextChange(e)} rows="4" cols="50" /></div>
+      <RightSide />
     </div>
   };
 }
 
-function mapStateToProps(state) {  
+function mapStateToProps(state) {
   return {
-    myTextarea:state.reduceData.myTextarea,
-    text :state.reduceData.text,
+    myTextarea: state.reduceData.myTextarea,
+    text: state.reduceData.text,
     id: state.reduceData.activeElement,
-    data:state.reduceData.data,
-    activeElement:state.reduceData.activeElement
+    data: state.reduceData.data,
+    activeElement: state.reduceData.activeElement
   }
 }
 
-export default connect(mapStateToProps) (App);
+export default connect(mapStateToProps)(App);
