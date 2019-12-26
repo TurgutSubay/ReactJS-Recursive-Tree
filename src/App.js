@@ -38,16 +38,16 @@ class App extends React.Component {
       myRefArr: [],
       ii: 0
     }
-    this.myRef = React.createRef();
+    //this.myRef = React.createRef();
   }
   refCreate(id) {
-    //this.state.myRefArr[id] = React.createRef();
     myRefArr[id] = React.createRef();
   }
 
   componentDidMount() {
-    this.refCreate(this.state.ii);
-    this.state.ii = this.state.ii + 1;
+    //this.refCreate(this.state.ii);
+    //this.state.ii = this.state.ii + 1;
+    this.refCreate(0);
     Data('user').then((serverData) => {
       this.setState({ data: serverData.data })
       store.dispatch({ type: 'set', payLoad: serverData.data });
@@ -57,8 +57,7 @@ class App extends React.Component {
   }
 
   setCSS(e) {
-    let id = e.target.id;
-    //alert('setCSS'+id)  
+    let id = e.target.id; 
     console.log(id + "-" + myRefArr[id].current.className);// document.getElementById(id).className);
     if (myRefArr[id].current.className === 'nestedClosed') {
       myRefArr[id].current.classList.remove('nestedClosed');
@@ -103,8 +102,8 @@ class App extends React.Component {
         stext = element.text;
       }
     });
-    // 
-    let node = myRefArr[0].current;//this.myRef.current;
+    
+    let node = myRefArr[0].current;
     node.value = stext;
     let parent = -1;
     if (e.target.hasAttribute('parent')) {
@@ -163,7 +162,7 @@ class App extends React.Component {
     return eArry;
   }
   allowDrop(e) {
-    document.getElementById('myCaption').value=e.target.nodeName;
+   // document.getElementById('myCaption').value=e.target.nodeName;
     if(e.target.nodeName === "BUTTON" || e.target.nodeName === "DIV"){
       e.preventDefault();  
     }else{
