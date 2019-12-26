@@ -29,7 +29,7 @@ const updateText = (e)=>{
   let id = store.getState().reduceData.activeElement;
   updataTextData(id, sText)
   .then((serverData) => {
-    store.dispatch({ type: 'set', payLoad: serverData.data});    
+   // store.dispatch({ type: 'set', payLoad: serverData.data});    
     })
   .catch(err => console.log('There was an error:' + err));  
  }
@@ -46,7 +46,7 @@ const deleteText = (e)=>{
     .catch(err => console.log('There was an error:' + err));
     }
 } 
-
+   
 function Nav() {
   return (   
     <nav className="navbar navbar-expand-sm bg-dark navbar-dark" style={addCSS}>
@@ -54,7 +54,7 @@ function Nav() {
      <div className="form-inline top10">     
        <input type="text" id="myCaption" placeholder="Caption" className="form-control mr-sm-2"/>&nbsp;&nbsp;       
        <button type="button" className="btn btn-success form-inline" onClick={()=>AddElement()}>Add New</button>&nbsp;&nbsp;
-       <button type="button" className="btn btn-success form-inline" onClick={(e)=>updateText(e)}>Update Text</button>&nbsp;&nbsp;
+       <button type="button" className="btn btn-success form-inline" onClick={(e)=>updateText(e)}>Current Text Server Update </button>&nbsp;&nbsp;
        <button type="button" className="btn btn-danger form-inline" onClick={(e)=>deleteText(e)}>Delete</button>
      </div>
     </nav> 

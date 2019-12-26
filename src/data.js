@@ -90,7 +90,8 @@ export function updataTextData(id, text){
     })
     .then(response => response.json())
     .then(response=> {            
-        resolve(response);        
+        resolve(response);
+        alert("Server updated");    
         console.log('updataTextData:'+response );
       })
     .catch(xx =>{           

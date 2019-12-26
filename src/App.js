@@ -24,6 +24,7 @@ const styleLeft2 = {
 }
 
 var appData;
+var myRefArr=[];
 
 class App extends React.Component {
 
@@ -33,12 +34,20 @@ class App extends React.Component {
       data: [],
       liCSS: 'nestedClosed',
       listLi: [],
-      text:""      
+      text:"",
+      myRefArr:[],
+      ii:0
     }
     this.myRef = React.createRef();
   }
- 
+  refCreate(id){
+   //this.state.myRefArr[id] = React.createRef();
+   myRefArr[id] = React.createRef();
+  }
+
   componentDidMount() {
+    this.refCreate(this.state.ii);
+    this.state.ii = this.state.ii +1;
     Data('user').then((serverData) => {
       this.setState({ data: serverData.data })
       store.dispatch({ type: 'set', payLoad: serverData.data });
@@ -48,16 +57,17 @@ class App extends React.Component {
   }
 
   setCSS(e) {
-    let id = e.target.lang;    
-    console.log(id + "-" + document.getElementById(id).className);
-    if (document.getElementById(id).className === 'nestedClosed') {
-      document.getElementById(id).classList.remove('nestedClosed');
-      document.getElementById(id).classList.add('nestedShow');
-      document.querySelector("[lang='" + id + "']").classList.add('myCaret-down');      
+    let id = e.target.id;  
+    //alert('setCSS'+id)  
+    console.log(id + "-" + myRefArr[id].current.className);// document.getElementById(id).className);
+    if ( myRefArr[id].current.className === 'nestedClosed') {
+      myRefArr[id].current.classList.remove('nestedClosed');
+      myRefArr[id].current.classList.add('nestedShow');
+      document.getElementById(id).classList.add('myCaret-down');      
     } else {
-      document.getElementById(id).classList.remove('nestedShow');
-      document.getElementById(id).classList.add('nestedClosed');
-      document.querySelector("[lang='" + id + "']").classList.remove('myCaret-down');
+      myRefArr[id].current.classList.remove('nestedShow');
+      myRefArr[id].current.classList.add('nestedClosed');
+      document.getElementById(id).classList.remove('myCaret-down');
     }
   }
 
@@ -65,30 +75,26 @@ class App extends React.Component {
     appData = this.state.data;  
     appData = this.props.data;
     let id=-1;    
-    if(e.target.hasAttribute('lang')){
-       id =  e.target.lang;
-    }else{
-      id =  e.target.id;
-    }
-    
-    if (store.getState().reduceData.activeElement>0){      
-      if(document.getElementById(store.getState().reduceData.activeElement).nodeName ==='BUTTON'){
-        document.getElementById(store.getState().reduceData.activeElement).classList.add('btn-primary');
-        document.getElementById(store.getState().reduceData.activeElement).classList.remove('btn-success');
-      }
-      if(document.getElementById(store.getState().reduceData.activeElement).nodeName ==='UL'){
-        document.querySelector('[lang="'+store.getState().reduceData.activeElement+'"]').classList.remove('btn-success');
-        document.querySelector('[lang="'+store.getState().reduceData.activeElement+'"]').classList.add('btn-danger');     
+    id =  e.target.id;   
+   
+    if (this.props.activeElement>0){      
+       if(myRefArr[this.props.activeElement].current.nodeName ==='BUTTON'){
+          myRefArr[this.props.activeElement].current.classList.add('btn-primary');
+          myRefArr[this.props.activeElement].current.classList.remove('btn-success');
+        }
+      if(myRefArr[this.props.activeElement].current.nodeName ==='UL'){
+        document.getElementById(this.props.activeElement).classList.add('btn-danger'); 
+        document.getElementById(this.props.activeElement).classList.remove('btn-success'); 
       }
     }
-    if(document.getElementById(id).nodeName ==='BUTTON'){
-     document.getElementById(id).classList.remove('btn-primary');
-     document.getElementById(id).classList.remove('btn-danger');
-     document.getElementById(id).classList.add('btn-success');
+    if(myRefArr[id].current.nodeName ==='BUTTON'){
+      myRefArr[id].current.classList.remove('btn-primary');
+      myRefArr[id].current.classList.remove('btn-danger');
+      myRefArr[id].current.classList.add('btn-success');
     }
-    if(document.getElementById(id).nodeName ==='UL'){
-      document.querySelector('[lang="'+id+'"]').classList.remove('btn-danger');
-      document.querySelector('[lang="'+id+'"]').classList.add('btn-success');     
+    if(myRefArr[id].current.nodeName ==='UL'){
+      document.getElementById(id).classList.remove('btn-danger'); 
+      document.getElementById(id).classList.add('btn-success'); 
     }
    
     let stext="";
@@ -97,8 +103,8 @@ class App extends React.Component {
         stext =element.text;
       }
     });          
-   
-   let  node = this.myRef.current;
+    // 
+   let  node = myRefArr[0].current;//this.myRef.current;
    node.value = stext;
    let parent = -1;
    if(e.target.hasAttribute('parent')){
@@ -134,14 +140,15 @@ class App extends React.Component {
       let parent = appData[i].parent;
       let text = appData[i].text;
       let caption = appData[i].caption;
+      this.refCreate(id);
 
       if ((i + 1) < appData.length && appData[i + 1].parent === id) {
         eArry.push(
           <li  key={id} draggable="true" onDragStart={(e) => this.drag(e)} onDragOver={(e) => this.allowDrop(e)}  onDrop={(e)=>this.drop(e)}>
             <span myDrop={id}  className="myCaret" onClick={(id) => this.setCSS(id)}>
-              <div  lang={id} parent={parent} value={row} className="btn btn-danger top10" onClick={(e) => this.showData(e)}>{caption}</div>
+              <div id={id}  parent={parent} value={row} className="btn btn-danger top10" onClick={(e) => this.showData(e)}>{caption}</div>
             </span>
-            <ul id={id} ref={id} className={this.state.liCSS} data={text}>
+            <ul ref={myRefArr[id]} className={this.state.liCSS} data={text}>
               {this.tree_(id, id)}
             </ul>
           </li>
@@ -149,7 +156,7 @@ class App extends React.Component {
       } else {
         eArry.push(
           <li value={id} draggable="true" parent={parent} onDragStart={(e) => this.drag(e)}  onDragOver={(e) => this.allowDrop(e)}  onDrop={(e)=>this.drop(e)}  key={id} data1={text}><span className="myCaret"></span>
-            <button id={id} parent={parent} type="button" className="btn btn-primary top10" onClick={(e) => this.showData(e)}>{caption}</button>
+            <button ref={myRefArr[id]} id={id} parent={parent} type="button" className="btn btn-primary top10" onClick={(e) => this.showData(e)}>{caption}</button>
           </li>);
       }
     }
@@ -187,7 +194,7 @@ class App extends React.Component {
   }
 
   myTextChange(e){   
-    let stext = this.myRef.current.value;
+    let stext = myRefArr[0].current.value;//this.myRef.current.value;
    store.dispatch({ type: 'setText', text:stext,id:this.props.id});
   }
 
@@ -200,7 +207,7 @@ class App extends React.Component {
           {this.tree_(0, 0)}
         </ul>
       </div>
-      <div  style={styleLeft2}><textarea ref={this.myRef} id="myText" style={this.props.myTextarea} onKeyUp={(e) => this.myTextChange(e)} rows="4" cols="50"/></div>
+      <div  style={styleLeft2}><textarea ref={myRefArr[0]} id="myText" style={this.props.myTextarea} onKeyUp={(e) => this.myTextChange(e)} rows="4" cols="50"/></div>
       <RightSide/>
     </div>
   };
@@ -211,7 +218,8 @@ function mapStateToProps(state) {
     myTextarea:state.reduceData.myTextarea,
     text :state.reduceData.text,
     id: state.reduceData.activeElement,
-    data:state.reduceData.data
+    data:state.reduceData.data,
+    activeElement:state.reduceData.activeElement
   }
 }
 
