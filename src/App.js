@@ -5,26 +5,10 @@ import { Data, changeParent } from './data.js';
 import { store } from './index.js';
 import RightSide from './rightSide';
 import { connect } from 'react-redux';
+import { styleLeft, styleLeft2 } from './globalVariables';
 
-const styleLeft = {
-  float: 'left',
-  width: '20%',
-  backgroundColor: '#333',
-  overflow: 'auto',
-  height: '90vh'
-}
-const styleLeft2 = {
-  float: 'left',
-  width: '60%',
-  height: '90vh',
-  marginTop: '0px',
-  marginLeft: '0px',
-  backgroundColor: '#333',
-  padding: '10px'
-}
-
-var appData;
-var myRefArr = [];
+export var appData;
+export var myRefArr = [];
 
 class App extends React.Component {
 
@@ -38,26 +22,23 @@ class App extends React.Component {
       myRefArr: [],
       ii: 0
     }
-    //this.myRef = React.createRef();
   }
   refCreate(id) {
     myRefArr[id] = React.createRef();
   }
 
   componentDidMount() {
-    //this.refCreate(this.state.ii);
-    //this.state.ii = this.state.ii + 1;
     this.refCreate(0);
     Data('user').then((serverData) => {
-      this.setState({ data: serverData.data })
       store.dispatch({ type: 'set', payLoad: serverData.data });
     })
       .catch(err => console.log('There was an error:' + err));
     console.log('App componentDidMount');
+    appData = this.props.data;
   }
 
   setCSS(e) {
-    let id = e.target.id; 
+    let id = e.target.id;
     console.log(id + "-" + myRefArr[id].current.className);// document.getElementById(id).className);
     if (myRefArr[id].current.className === 'nestedClosed') {
       myRefArr[id].current.classList.remove('nestedClosed');
@@ -71,11 +52,9 @@ class App extends React.Component {
   }
 
   showData(e) {
-    appData = this.state.data;
-    appData = this.props.data;
-    let id = -1;
-    id = e.target.id;
-
+    console.log('showData:'+e.target.id);    
+    let id = e.target.id;
+    console.log('target:'+id);
     if (this.props.activeElement > 0) {
       if (myRefArr[this.props.activeElement].current.nodeName === 'BUTTON') {
         myRefArr[this.props.activeElement].current.classList.add('btn-primary');
@@ -102,7 +81,7 @@ class App extends React.Component {
         stext = element.text;
       }
     });
-    
+
     let node = myRefArr[0].current;
     node.value = stext;
     let parent = -1;
@@ -114,7 +93,7 @@ class App extends React.Component {
 
   query(parentRow, startRow) {
     let arrCh = [];
-    appData = this.state.data;
+    appData = this.props.data;
     for (let row1 = 0; row1 < appData.length; row1++) {
       if (Number(appData[row1].parent) === Number(parentRow)) {
         arrCh.push(
@@ -126,7 +105,7 @@ class App extends React.Component {
   }
 
   tree_(parentRow, startRow) {
-    appData = this.state.data;
+    appData = this.props.data;
     if (appData.length === 0) {
       return;
     }
@@ -162,10 +141,10 @@ class App extends React.Component {
     return eArry;
   }
   allowDrop(e) {
-   // document.getElementById('myCaption').value=e.target.nodeName;
-    if(e.target.nodeName === "BUTTON" || e.target.nodeName === "DIV"){
-      e.preventDefault();  
-    }else{
+    // document.getElementById('myCaption').value=e.target.nodeName;
+    if (e.target.nodeName === "BUTTON" || e.target.nodeName === "DIV") {
+      e.preventDefault();
+    } else {
       return
     }
   }
@@ -206,7 +185,7 @@ class App extends React.Component {
   render() {
     console.log('App: render');
     return <div>
-      <Nav />
+      <Nav showData={this.showData}/>
       <div myDrop="0" style={styleLeft} onDragOver={(e) => this.allowDrop(e)} onDrop={(e) => this.drop(e)}>
         <ul className="myUL">
           {this.tree_(0, 0)}

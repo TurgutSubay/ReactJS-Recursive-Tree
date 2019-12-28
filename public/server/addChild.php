@@ -47,6 +47,14 @@ function find_child($id)
 }
 
 find_child(0);
-$res = array('result' => 'TRUE', 'data' => $arry);
+
+$SQL = "SELECT max(id) as id from sample";
+$db2 = new PDO($dir) or die('cannot open the database');
+$stmt  = $db2->query($SQL);
+$row  = $stmt->fetchObject();
+$id =$row->id;
+$db2 = null;
+
+$res = array('result' => 'TRUE', 'data' => $arry, 'newAdded'=>$id);
 
 echo json_encode($res);
