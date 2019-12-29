@@ -38,25 +38,29 @@ class App extends React.Component {
   }
 
   setCSS(e) {
-    let id = e.target.id;
-    console.log(id + "-" + myRefArr[id].current.className);// document.getElementById(id).className);
+    let id=-1;
+    if (e.target.nodeName === "SPAN") {
+      //document.querySelector("[lang='" + id + "']").classList.add('myCaret-down'); 
+       id = e.target.lang;     
+    }else{
+     id = e.target.id;
+    }
     if (myRefArr[id].current.className === 'nestedClosed') {
       myRefArr[id].current.classList.remove('nestedClosed');
       myRefArr[id].current.classList.add('nestedShow');
-      //document.getElementById(id).classList.add('myCaret-down');
-      document.querySelector("[lang='" + id + "']").classList.add('myCaret-down'); 
+      document.querySelector("[lang='" + id + "']").classList.add('myCaret-down');
     } else {
       myRefArr[id].current.classList.remove('nestedShow');
       myRefArr[id].current.classList.add('nestedClosed');
-      //document.getElementById(id).classList.remove('myCaret-down');
-      document.querySelector("[lang='" + id + "']").classList.remove('myCaret-down'); 
+      document.querySelector("[lang='" + id + "']").classList.remove('myCaret-down');
     }
   }
 
   showData(e) {
-    console.log('showData:'+e.target.id);    
+
+    console.log('showData:' + e.target.id);
     let id = e.target.id;
-    console.log('target:'+id);
+
     if (this.props.activeElement > 0) {
       if (myRefArr[this.props.activeElement].current.nodeName === 'BUTTON') {
         myRefArr[this.props.activeElement].current.classList.add('btn-primary');
@@ -98,11 +102,12 @@ class App extends React.Component {
     appData = this.props.data;
     for (let row1 = 0; row1 < appData.length; row1++) {
       if (Number(appData[row1].parent) === Number(parentRow)) {
-        arrCh.push( row1 );
+        arrCh.push(row1);
       }
     }
     return arrCh;
   }
+
   tree_(parentRow) {
     appData = this.props.data;
     if (appData.length === 0) {
@@ -120,8 +125,8 @@ class App extends React.Component {
       this.refCreate(id);
 
       //if ((i + 1) < appData.length && appData[i + 1].parent === id) {
-    if(this.query(id).length>0){
-      eArry.push(
+      if (this.query(id).length > 0) {
+        eArry.push(
           <li key={id} draggable="true" onDragStart={(e) => this.drag(e)} onDragOver={(e) => this.allowDrop(e)} onDrop={(e) => this.drop(e)}>
             <span lang={id} className="myCaret" onClick={(id) => this.setCSS(id)}>
               <div id={id} parent={parent} value={row} className="btn btn-danger top10" onClick={(e) => this.showData(e)}>{caption}</div>
@@ -140,7 +145,7 @@ class App extends React.Component {
     }
     return eArry;
   }
-  
+
   allowDrop(e) {
     // document.getElementById('myCaption').value=e.target.nodeName;
     if (e.target.nodeName === "BUTTON" || e.target.nodeName === "DIV") {
@@ -186,7 +191,7 @@ class App extends React.Component {
   render() {
     console.log('App: render');
     return <div>
-      <Nav showData={this.showData}/>
+      <Nav showData={this.showData} />
       <div style={styleLeft} onDragOver={(e) => this.allowDrop(e)} onDrop={(e) => this.drop(e)}>
         <ul className="myUL">
           {this.tree_(0)}
