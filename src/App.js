@@ -43,11 +43,13 @@ class App extends React.Component {
     if (myRefArr[id].current.className === 'nestedClosed') {
       myRefArr[id].current.classList.remove('nestedClosed');
       myRefArr[id].current.classList.add('nestedShow');
-      document.getElementById(id).classList.add('myCaret-down');
+      //document.getElementById(id).classList.add('myCaret-down');
+      document.querySelector("[lang='" + id + "']").classList.add('myCaret-down'); 
     } else {
       myRefArr[id].current.classList.remove('nestedShow');
       myRefArr[id].current.classList.add('nestedClosed');
-      document.getElementById(id).classList.remove('myCaret-down');
+      //document.getElementById(id).classList.remove('myCaret-down');
+      document.querySelector("[lang='" + id + "']").classList.remove('myCaret-down'); 
     }
   }
 
@@ -121,7 +123,7 @@ class App extends React.Component {
     if(this.query(id).length>0){
       eArry.push(
           <li key={id} draggable="true" onDragStart={(e) => this.drag(e)} onDragOver={(e) => this.allowDrop(e)} onDrop={(e) => this.drop(e)}>
-            <span myDrop={id} className="myCaret" onClick={(id) => this.setCSS(id)}>
+            <span lang={id} className="myCaret" onClick={(id) => this.setCSS(id)}>
               <div id={id} parent={parent} value={row} className="btn btn-danger top10" onClick={(e) => this.showData(e)}>{caption}</div>
             </span>
             <ul ref={myRefArr[id]} className={this.state.liCSS} data={text}>
@@ -167,7 +169,7 @@ class App extends React.Component {
       alert('Parent id:' + parent);
     }
     let child = e.dataTransfer.getData("text");
-    if (parent != child) {
+    if (parent !== child) {
       changeParent(parent, child).then((serverData) => {
         this.setState({ data: serverData.data })
         store.dispatch({ type: 'set', payLoad: serverData.data });
@@ -185,7 +187,7 @@ class App extends React.Component {
     console.log('App: render');
     return <div>
       <Nav showData={this.showData}/>
-      <div myDrop="0" style={styleLeft} onDragOver={(e) => this.allowDrop(e)} onDrop={(e) => this.drop(e)}>
+      <div style={styleLeft} onDragOver={(e) => this.allowDrop(e)} onDrop={(e) => this.drop(e)}>
         <ul className="myUL">
           {this.tree_(0)}
         </ul>
