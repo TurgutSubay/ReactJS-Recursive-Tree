@@ -138,44 +138,7 @@ class App extends React.Component {
     }
     return eArry;
   }
-  /*tree_(parentRow) {
-    appData = this.props.data;
-    if (appData.length === 0) {
-      return;
-    }
-    let eArry = [];
-    var arry = this.query(parentRow);
-
-    for (var row = 0; row < arry.length; row++) {
-      let i = arry[row];
-      let id = appData[i].id;
-      let parent = appData[i].parent;
-      let text = appData[i].text;
-      let caption = appData[i].caption;
-      this.refCreate(id);
-
-      if ((i + 1) < appData.length && appData[i + 1].parent === id) {
-        eArry.push(
-          <li key={id} draggable="true" onDragStart={(e) => this.drag(e)} onDragOver={(e) => this.allowDrop(e)} onDrop={(e) => this.drop(e)}>
-            <span myDrop={id} className="myCaret" onClick={(id) => this.setCSS(id)}>
-              <div id={id} parent={parent} value={row} className="btn btn-danger top10" onClick={(e) => this.showData(e)}>{caption}</div>
-            </span>
-            <ul ref={myRefArr[id]} className={this.state.liCSS} data={text}>
-              {this.tree_(id)}
-            </ul>
-          </li>
-        );
-      } else {
-        eArry.push(
-          <li value={id} draggable="true" parent={parent} onDragStart={(e) => this.drag(e)} onDragOver={(e) => this.allowDrop(e)} onDrop={(e) => this.drop(e)} key={id} data1={text}><span className="myCaret"></span>
-            <button ref={myRefArr[id]} id={id} parent={parent} type="button" className="btn btn-primary top10" onClick={(e) => this.showData(e)}>{caption}</button>
-          </li>);
-      }
-    }
-    return eArry;
-  }
-*/
-
+  
   allowDrop(e) {
     // document.getElementById('myCaption').value=e.target.nodeName;
     if (e.target.nodeName === "BUTTON" || e.target.nodeName === "DIV") {
