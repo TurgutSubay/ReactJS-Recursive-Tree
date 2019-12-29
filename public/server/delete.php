@@ -36,7 +36,21 @@ function find_child($id)
     $db2 = null;
 }
 
-find_child(0);
+function myList($id)
+{
+    global $arry;
+    global  $dir;
+    $SQL2 = "SELECT * FROM sample  WHERE  id>$id order by parent, id";
+    $db2 = new PDO($dir) or die('cannot open the database');
+    foreach ($db2->query($SQL2) as $row1) {
+        $arry[] = ['id' => $row1['id'], 'parent' => $row1['parent'], 'caption' => $row1['caption'], 'text' => $row1['text']];
+    }
+    $db2 = null;
+}
+
+//find_child(0);
+myList(0);
+
 $res = array('result' => $text, 'data' => $arry);
 
 echo json_encode($res);

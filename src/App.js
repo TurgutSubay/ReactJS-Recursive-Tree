@@ -91,26 +91,60 @@ class App extends React.Component {
     store.dispatch({ type: 'setElement', payLoad: id, parents: parent, text: stext });
   }
 
-  query(parentRow, startRow) {
+  query(parentRow) {
     let arrCh = [];
     appData = this.props.data;
     for (let row1 = 0; row1 < appData.length; row1++) {
       if (Number(appData[row1].parent) === Number(parentRow)) {
-        arrCh.push(
-          row1
-        );
+        arrCh.push( row1 );
       }
     }
     return arrCh;
   }
-
-  tree_(parentRow, startRow) {
+  tree_(parentRow) {
     appData = this.props.data;
     if (appData.length === 0) {
       return;
     }
     let eArry = [];
-    var arry = this.query(parentRow, startRow);
+    var arry = this.query(parentRow);
+
+    for (var row = 0; row < arry.length; row++) {
+      let i = arry[row];
+      let id = appData[i].id;
+      let parent = appData[i].parent;
+      let text = appData[i].text;
+      let caption = appData[i].caption;
+      this.refCreate(id);
+
+      //if ((i + 1) < appData.length && appData[i + 1].parent === id) {
+    if(this.query(id).length>0){
+      eArry.push(
+          <li key={id} draggable="true" onDragStart={(e) => this.drag(e)} onDragOver={(e) => this.allowDrop(e)} onDrop={(e) => this.drop(e)}>
+            <span myDrop={id} className="myCaret" onClick={(id) => this.setCSS(id)}>
+              <div id={id} parent={parent} value={row} className="btn btn-danger top10" onClick={(e) => this.showData(e)}>{caption}</div>
+            </span>
+            <ul ref={myRefArr[id]} className={this.state.liCSS} data={text}>
+              {this.tree_(id)}
+            </ul>
+          </li>
+        );
+      } else {
+        eArry.push(
+          <li value={id} draggable="true" parent={parent} onDragStart={(e) => this.drag(e)} onDragOver={(e) => this.allowDrop(e)} onDrop={(e) => this.drop(e)} key={id} data1={text}><span className="myCaret"></span>
+            <button ref={myRefArr[id]} id={id} parent={parent} type="button" className="btn btn-primary top10" onClick={(e) => this.showData(e)}>{caption}</button>
+          </li>);
+      }
+    }
+    return eArry;
+  }
+  /*tree_(parentRow) {
+    appData = this.props.data;
+    if (appData.length === 0) {
+      return;
+    }
+    let eArry = [];
+    var arry = this.query(parentRow);
 
     for (var row = 0; row < arry.length; row++) {
       let i = arry[row];
@@ -127,7 +161,7 @@ class App extends React.Component {
               <div id={id} parent={parent} value={row} className="btn btn-danger top10" onClick={(e) => this.showData(e)}>{caption}</div>
             </span>
             <ul ref={myRefArr[id]} className={this.state.liCSS} data={text}>
-              {this.tree_(id, id)}
+              {this.tree_(id)}
             </ul>
           </li>
         );
@@ -140,6 +174,8 @@ class App extends React.Component {
     }
     return eArry;
   }
+*/
+
   allowDrop(e) {
     // document.getElementById('myCaption').value=e.target.nodeName;
     if (e.target.nodeName === "BUTTON" || e.target.nodeName === "DIV") {
@@ -188,7 +224,7 @@ class App extends React.Component {
       <Nav showData={this.showData}/>
       <div myDrop="0" style={styleLeft} onDragOver={(e) => this.allowDrop(e)} onDrop={(e) => this.drop(e)}>
         <ul className="myUL">
-          {this.tree_(0, 0)}
+          {this.tree_(0)}
         </ul>
       </div>
       <div style={styleLeft2}><textarea ref={myRefArr[0]} id="myText" style={this.props.myTextarea} onKeyUp={(e) => this.myTextChange(e)} rows="4" cols="50" /></div>
