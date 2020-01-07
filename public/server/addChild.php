@@ -5,19 +5,27 @@ header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Content-Range, Content-Disposition, Content-Description, Auth, X-Requested-With');
 
 $arry = [];
-$dir = 'sqlite:./serverNots.sqlite';
+//$dir = 'sqlite:./serverNots.sqlite';
+require 'path.php';
+$dir = 'sqlite:'.$path.'/serverNots.sqlite';
 
 $parent = -1;
-if (isset($_GET['parent'])) {
+if (isset($_POST['parent'])) {
+    $parent = $_POST['parent'];
+} elseif (isset($_GET['parent'])) {
     $parent = $_GET['parent'];
 }
 
 $text = -1;
-if (isset($_GET['text'])) {
+if (isset($_POST['text'])) {
+    $text = $_POST['text'];
+} elseif (isset($_GET['text'])) {
     $text = $_GET['text'];
 }
 
-if (isset($_GET['caption'])) {
+if (isset($_POST['caption'])) {
+    $caption = $_POST['caption'];
+} elseif (isset($_GET['caption'])) {
     $caption = $_GET['caption'];
 } else {
     $res = array('result' => 'FALSE', 'data' => 'No Caption');
@@ -60,13 +68,13 @@ function myList($id)
 
 //find_child(0);
 myList(0);
-$SQL = "SELECT max(id) as id from sample";
+$SQL = 'SELECT max(id) as id from sample';
 $db2 = new PDO($dir) or die('cannot open the database');
-$stmt  = $db2->query($SQL);
-$row  = $stmt->fetchObject();
-$id =$row->id;
+$stmt = $db2->query($SQL);
+$row = $stmt->fetchObject();
+$id = $row->id;
 $db2 = null;
 
-$res = array('result' => 'TRUE', 'data' => $arry, 'newAdded'=>$id);
+$res = array('result' => 'TRUE', 'data' => $arry, 'newAdded' => $id);
 
 echo json_encode($res);

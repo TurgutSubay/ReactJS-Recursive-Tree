@@ -5,7 +5,9 @@ header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Content-Range, Content-Disposition, Content-Description, Auth, X-Requested-With');
 
 $arry = [];
-$dir = 'sqlite:./serverNots.sqlite';
+//$dir = 'sqlite:./serverNots.sqlite';
+require 'path.php';
+$dir = 'sqlite:'.$path.'/serverNots.sqlite';
 
 $id = -1;
 if (isset($_GET['id'])) {

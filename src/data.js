@@ -55,7 +55,7 @@ export function addChild(parent, text,caption){
     fetch('http://localhost/react/reactjs-recursive-tree/public/server/addChild.php?parent='+parent+'&text='+text+'&caption='+caption,
     //fetch('http://localhost/react/server/addChild.php?parent='+parent+'&text='+text+'&caption='+caption,
     {
-          method: "GET",
+          method: "POST",
           cache: 'no-cache',               
           credentials: 'same-origin', 
           redirect: 'follow', 
@@ -63,7 +63,8 @@ export function addChild(parent, text,caption){
           mode: 'cors',                    
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded'               
-          }         
+          },
+          body:  'parent='+ parent + '&text=' +  text + '&caption='+caption        
     })
     .then(response => response.json())
     .then(response=> {            
