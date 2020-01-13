@@ -79,8 +79,8 @@ export function addChild(parent, text,caption){
 
 export function updataTextData(id, text){
   return new Promise(function(resolve, reject){        
-   //fetch('http://localhost/react/reactjs-recursive-tree/public/server/updateText.php',
-   fetch('http://localhost/react/server/updateText.php',
+   fetch('http://localhost/react/reactjs-recursive-tree/public/server/updateText.php',
+   //fetch('http://localhost/react/server/updateText.php',
    {
           method: "POST",
           cache: 'no-cache',               
