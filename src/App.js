@@ -5,11 +5,14 @@ import { Data, changeParent } from './data.js';
 import { store } from './index.js';
 import RightSide from './rightSide';
 import { connect } from 'react-redux';
-import { styleLeft, styleLeft2 } from './globalVariables';
+import { styleLeft, styleTextAria,styleMain,styleHidden} from './globalVariables';
 
 export var appData;
 export var myRefArr = [];
-
+let level=0;
+let startTextWidth = 0;
+let startLeftPanelWidth = 0;
+let openedLevel= [];
 class App extends React.Component {
 
   constructor(props) {
@@ -20,14 +23,27 @@ class App extends React.Component {
       listLi: [],
       text: "",
       myRefArr: [],
-      ii: 0
+      ii: 0,     
     }
+
+    this.divText = React.createRef();
+    this.leftPanel= React.createRef();
+    this.main= React.createRef();
   }
   refCreate(id) {
     myRefArr[id] = React.createRef();
   }
 
   componentDidMount() {
+  
+   let infoPanelW  = parseInt(getComputedStyle(document.getElementById('infoPanel'),null).width); 
+   let leftPanelW  = parseInt(getComputedStyle(document.getElementById('leftPanel'),null).width);
+   let mainW  = parseInt(getComputedStyle(document.getElementById('main'),null).width);
+   let divText = document.getElementById('divText');   
+   startTextWidth =   mainW - infoPanelW - leftPanelW ;
+   startLeftPanelWidth = leftPanelW; 
+   this.divText.current.style.width = mainW - infoPanelW - leftPanelW + 'px';
+   console.log('W: ' + divText.style.width);
     this.refCreate(0);
     Data('user').then((serverData) => {
       store.dispatch({ type: 'set', payLoad: serverData.data });
@@ -57,9 +73,7 @@ class App extends React.Component {
   }
 
   showData(e) {
-
-    console.log('showData:' + e.target.id);
-    let id = e.target.id;
+    let id = e.target.id;  
 
     if (this.props.activeElement > 0) {
       if (myRefArr[this.props.activeElement].current.nodeName === 'BUTTON') {
@@ -79,7 +93,15 @@ class App extends React.Component {
     if (myRefArr[id].current.nodeName === 'UL') {
       document.getElementById(id).classList.remove('btn-danger');
       document.getElementById(id).classList.add('btn-success');
+      console.log(e);//openedLevel.push
     }
+
+    let wx = myRefArr[id].current.getAttribute('level') * 40;  // *40  padding-inline-start   
+    let divTextL = startLeftPanelWidth;
+    this.divText.current.style.left = divTextL +  wx + 'px';    
+    this.divText.current.style.width =  startTextWidth - wx + 'px';
+    this.leftPanel.current.style.width = startLeftPanelWidth + wx + 'px';
+    
 
     let stext = "";
     appData.forEach(element => {
@@ -123,23 +145,24 @@ class App extends React.Component {
       let text = appData[i].text;
       let caption = appData[i].caption;
       this.refCreate(id);
-
-      //if ((i + 1) < appData.length && appData[i + 1].parent === id) {
-      if (this.query(id).length > 0) {
+      
+      if (this.query(id).length > 0) {        
         eArry.push(
-          <li key={id} draggable="true" onDragStart={(e) => this.drag(e)} onDragOver={(e) => this.allowDrop(e)} onDrop={(e) => this.drop(e)}>
+          <li level={level} key={id} draggable="true" onDragStart={(e) => this.drag(e)} onDragOver={(e) => this.allowDrop(e)} onDrop={(e) => this.drop(e)}> 
+            <div style={styleHidden}>{level++}</div>          
             <span lang={id} className="myCaret" onClick={(id) => this.setCSS(id)}>
               <div id={id} parent={parent} value={row} className="btn btn-danger top10" onClick={(e) => this.showData(e)}>{caption}</div>
-            </span>
-            <ul ref={myRefArr[id]} className={this.state.liCSS} data={text}>
+            </span>            
+            <ul level={level} ref={myRefArr[id]} className={this.state.liCSS} data={text}>
               {this.tree_(id)}
             </ul>
-          </li>
-        );
+            <div style={styleHidden}>{level--}</div>               
+          </li>          
+        );               
       } else {
         eArry.push(
-          <li value={id} draggable="true" parent={parent} onDragStart={(e) => this.drag(e)} onDragOver={(e) => this.allowDrop(e)} onDrop={(e) => this.drop(e)} key={id} data1={text}><span className="myCaret"></span>
-            <button ref={myRefArr[id]} id={id} parent={parent} type="button" className="btn btn-primary top10" onClick={(e) => this.showData(e)}>{caption}</button>
+          <li level={level} value={id} draggable="true" parent={parent} onDragStart={(e) => this.drag(e)} onDragOver={(e) => this.allowDrop(e)} onDrop={(e) => this.drop(e)} key={id} data1={text}><span className="myCaret"></span>
+            <button level={level} ref={myRefArr[id]} id={id} parent={parent} type="button" className="btn btn-primary top10" onClick={(e) => this.showData(e)}>{caption}</button>
           </li>);
       }
     }
@@ -188,16 +211,22 @@ class App extends React.Component {
     store.dispatch({ type: 'setText', text: stext, id: this.props.id });
   }
 
+  mousemove(e){      
+    //let leftPanelW  = parseInt(getComputedStyle(document.getElementById('leftPanel'),null).width);
+  }
+  
   render() {
     console.log('App: render');
-    return <div>
-      <Nav showData={this.showData} />
-      <div style={styleLeft} onDragOver={(e) => this.allowDrop(e)} onDrop={(e) => this.drop(e)}>
+    return <div id="main" ref={this.main}  style={styleMain} onMouseMove={(e)=> this.mousemove(e)}>   
+      <Nav/>   
+      <div id="leftPanel" ref={this.leftPanel} style={styleLeft} onDragOver={(e) => this.allowDrop(e)} onDrop={(e) => this.drop(e)}>
         <ul className="myUL">
           {this.tree_(0)}
         </ul>
       </div>
-      <div style={styleLeft2}><textarea ref={myRefArr[0]} id="myText" style={this.props.myTextarea} onKeyUp={(e) => this.myTextChange(e)} rows="4" cols="50" /></div>
+      <div style={styleTextAria } id='divText' ref={this.divText}>
+        <textarea ref={myRefArr[0]} id="myText" style={this.props.myTextarea} onKeyUp={(e) => this.myTextChange(e)} rows="4" cols="50" />
+      </div>     
       <RightSide />
     </div>
   };

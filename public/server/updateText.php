@@ -18,7 +18,9 @@ if (isset($_POST['id'])) {
 }
 $text = '';
 if (isset($_POST['text'])) {
-    $text = $_POST['text'];
+    $noNeed = array('"', '\'');
+    $change = array('&quot;', '&apos;');
+    $text = str_replace($noNeed, $change, $_POST['text']);
 } else {
     $res = array('result' => 'FALSE', 'data' => '');
     echo json_encode($res);

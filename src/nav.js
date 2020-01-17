@@ -5,10 +5,9 @@ import { connect } from 'react-redux';
 import {appData, myRefArr} from './App';
 
 const addCSS = {
-  'backgroundColor': '#ccc'
+  'backgroundColor': '#ccc',
+  'marginBottom' : '0px'
 }
-
-
 
 const updateText = (e) => {
   e.stopPropagation();
@@ -34,9 +33,6 @@ const deleteText = (e) => {
   }
 }
 class Nav extends React.Component {
-  constructor(props) {
-    super(props);
-  }
   
   showData(e) { 
     let id = e.target.id;

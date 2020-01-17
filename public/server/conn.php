@@ -16,7 +16,10 @@ function find_child($id)
     $SQL2 = "SELECT * FROM sample  WHERE  Parent=$id";
     $db2 = new PDO($dir) or die('cannot open the database');
     foreach ($db2->query($SQL2) as $row1) {
-        $arry[] = ['id' => $row1['id'], 'parent' => $row1['parent'], 'caption' => $row1['caption'], 'text' => $row1['text']];
+        $noNeed = array('&quot;', '&apos;');
+        $change = array('"', '\'');
+        $text = str_replace($noNeed, $change, $row1['text']);
+        $arry[] = ['id' => $row1['id'], 'parent' => $row1['parent'], 'caption' => $row1['caption'], 'text' => $text];
         find_child($row1['id']);
     }
     $db2 = null;
@@ -29,7 +32,10 @@ function myList($id)
     $SQL2 = "SELECT * FROM sample  WHERE  id>$id order by parent, id";
     $db2 = new PDO($dir) or die('cannot open the database');
     foreach ($db2->query($SQL2) as $row1) {
-        $arry[] = ['id' => $row1['id'], 'parent' => $row1['parent'], 'caption' => $row1['caption'], 'text' => $row1['text']];
+        $noNeed = array('&quot;', '&apos;');
+        $change = array('"', '\'');
+        $text = str_replace($noNeed, $change, $row1['text']);
+        $arry[] = ['id' => $row1['id'], 'parent' => $row1['parent'], 'caption' => $row1['caption'], 'text' => $text];
     }
     $db2 = null;
 }
