@@ -12,7 +12,6 @@ export var myRefArr = [];
 let level=0;
 let startTextWidth = 0;
 let startLeftPanelWidth = 0;
-let openedLevel= [];
 class App extends React.Component {
 
   constructor(props) {

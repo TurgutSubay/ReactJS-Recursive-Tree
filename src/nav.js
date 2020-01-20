@@ -5,8 +5,9 @@ import { connect } from 'react-redux';
 import {appData, myRefArr} from './App';
 
 const addCSS = {
-  'backgroundColor': '#ccc',
-  'marginBottom' : '0px'
+  'backgroundColor': '#335577',
+  'marginBottom' : '0px',
+  'borderRadius': '0px'
 }
 
 const updateText = (e) => {
