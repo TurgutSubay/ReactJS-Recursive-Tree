@@ -13,7 +13,7 @@ export const styleLeft = {
     float:'left',
     position: 'absolute',
     minWidth: '200px',
-    height: '90vh',
+    height: '95vh',
     backgroundColor: '#333',
     overflow: 'auto'
   }
@@ -23,7 +23,7 @@ export  const styleTextAria = {
     left: '200px',    
     position: 'relative',    
    // width: '700px',
-    height: '90vh',
+    height: '95vh',
     marginTop: '0px',
     marginLeft: '0px',
     backgroundColor: '#333',
@@ -53,8 +53,8 @@ export const infoPanel = {
   float: 'right',
   zIndex: 1,
   left:'00px',  
-  width: '200px',
-  height:'90vh',
+  width: '100px',
+  height:'95vh',
   marginTop: '0px',
   marginLeft: '0px',
   backgroundColor:'#333',

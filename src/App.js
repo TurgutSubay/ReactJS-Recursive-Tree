@@ -27,7 +27,7 @@ class App extends React.Component {
     }
 
     this.divText = React.createRef();
-    this.leftPanel= React.createRef();
+    this.leftPanel= React.createRef();    
     this.main= React.createRef();
   }
   refCreate(id) {
@@ -35,7 +35,11 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-  
+   let nawAriaH =  parseInt(getComputedStyle(document.getElementById('navAria'),null).height);   
+   this.divText.current.style.height  =  window.innerHeight - nawAriaH + 'px';
+   this.leftPanel.current.style.height  =  window.innerHeight - nawAriaH + 'px';
+   document.getElementById('infoPanel').style.height  =  window.innerHeight - nawAriaH + 'px';
+
    let infoPanelW  = parseInt(getComputedStyle(document.getElementById('infoPanel'),null).width); 
    let leftPanelW  = parseInt(getComputedStyle(document.getElementById('leftPanel'),null).width);
    let mainW  = parseInt(getComputedStyle(document.getElementById('main'),null).width);

@@ -33,7 +33,10 @@ const deleteText = (e) => {
   }
 }
 class Nav extends React.Component {
-  
+  constructor(props) {
+    super(props);    
+    this.navAria = React.createRef();    
+  }
   showData(e) { 
     let id = e.target.id;
     console.log('target:'+id);
@@ -92,7 +95,7 @@ class Nav extends React.Component {
   }
 render(){
   return (
-    <nav className="navbar navbar-expand-sm bg-dark navbar-dark" style={addCSS}>
+    <nav className="navbar navbar-expand-sm bg-dark navbar-dark" style={addCSS} id='navAria'  ref={this.navAria}>
       <a className="navbar-brand" href="index.html"><span id="aaa"></span></a>
       <div className="form-inline top10">
        <input type="text" id="myCaption" placeholder="Caption" className="form-control mr-sm-2" />&nbsp;&nbsp;
