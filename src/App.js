@@ -7,11 +7,13 @@ import RightSide from './rightSide';
 import { connect } from 'react-redux';
 import { styleLeft, styleTextAria,styleMain,styleHidden} from './globalVariables';
 
+export let instance = null;
 export var appData;
 export var myRefArr = [];
 let level=0;
 let startTextWidth = 0;
 let startLeftPanelWidth = 0;
+
 class App extends React.Component {
 
   constructor(props) {
@@ -28,12 +30,15 @@ class App extends React.Component {
     this.divText = React.createRef();
     this.leftPanel= React.createRef();    
     this.main= React.createRef();
+
+    
   }
   refCreate(id) {
     myRefArr[id] = React.createRef();
   }
 
-  componentDidMount() {
+  componentDidMount() {   
+   
    let nawAriaH =  parseInt(getComputedStyle(document.getElementById('navAria'),null).height);   
    this.divText.current.style.height  =  window.innerHeight - nawAriaH + 'px';
    this.leftPanel.current.style.height  =  window.innerHeight - nawAriaH + 'px';
@@ -75,10 +80,19 @@ class App extends React.Component {
     }
   }
 
-  showData(e) {
-    let id = e.target.id;  
-
+   showData  = (e,server=0, prnt=0) => {
+    instance = this;
+    let id =  0;
+    if (server === 0){
+      id = e.target.id;
+      console.log('showData id:'+ id); 
+    }else{
+      id = e;
+      this.setState({ii:id});
+      console.log('showData Server id:'+ id); 
+    }
     if (this.props.activeElement > 0) {
+      if (myRefArr[this.props.activeElement].current){      
       if (myRefArr[this.props.activeElement].current.nodeName === 'BUTTON') {
         myRefArr[this.props.activeElement].current.classList.add('btn-primary');
         myRefArr[this.props.activeElement].current.classList.remove('btn-success');
@@ -87,6 +101,7 @@ class App extends React.Component {
         document.getElementById(this.props.activeElement).classList.add('btn-danger');
         document.getElementById(this.props.activeElement).classList.remove('btn-success');
       }
+    }
     }
     if (myRefArr[id].current.nodeName === 'BUTTON') {
       myRefArr[id].current.classList.remove('btn-primary');
@@ -105,7 +120,6 @@ class App extends React.Component {
     this.divText.current.style.width =  startTextWidth - wx + 'px';
     this.leftPanel.current.style.width = startLeftPanelWidth + wx + 'px';
     
-
     let stext = "";
     appData.forEach(element => {
       if (element.id === id) {
@@ -116,9 +130,13 @@ class App extends React.Component {
     let node = myRefArr[0].current;
     node.value = stext;
     let parent = -1;
+    if (server === 0){
     if (e.target.hasAttribute('parent')) {
       parent = e.target.getAttribute('parent');
+    }}else{
+      parent = prnt;
     }
+    console.log('showData id: '+ id+ '  parent : '+ parent);
     store.dispatch({ type: 'setElement', payLoad: id, parents: parent, text: stext });
   }
 

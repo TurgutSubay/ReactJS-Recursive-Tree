@@ -19,7 +19,7 @@ export function Data(){
             console.log('Data response:'+response );            
           })
         .catch(xx =>{           
-            console.log(xx);
+            console.log(JSON.stringify(xx));
           });
       });
 }
@@ -38,7 +38,7 @@ export function changeParent(parent, child){
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded'               
           },   
-          body:  'parent='+ parent + '&child=' +  child           
+          body:  JSON.stringify({"parent": parent , "child" :  child})
     })
     .then(response => response.json())
     .then(response=> {            
@@ -46,13 +46,14 @@ export function changeParent(parent, child){
         console.log('changeParent:'+response );
       })
     .catch(xx =>{           
-        console.log(xx);
+        console.log(JSON.stringify(xx));
       });
   });
 }
 export function addChild(parent, text,caption){
+  console.log(parent+ text+ caption);
   return new Promise(function(resolve, reject){        
-    fetch('http://localhost/react/reactjs-recursive-tree/public/server/addChild.php?parent='+parent+'&text='+text+'&caption='+caption,
+    fetch('http://localhost/react/reactjs-recursive-tree/public/server/addChild.php',
     //fetch('http://localhost/react/server/addChild.php?parent='+parent+'&text='+text+'&caption='+caption,
     {
           method: "POST",
@@ -64,15 +65,15 @@ export function addChild(parent, text,caption){
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded'               
           },
-          body:  'parent='+ parent + '&text=' +  text + '&caption='+caption        
+          body:  JSON.stringify({"parent":parent,"text":text,"caption": caption})          
     })
     .then(response => response.json())
     .then(response=> {            
         resolve(response);        
-        console.log('addChild:'+response );
+        console.log('addChild:'+JSON.stringify(response));
       })
-    .catch(xx =>{           
-        console.log(xx);
+    .catch(xx =>{             
+        console.log('RES: '+JSON.stringify(xx));
       });
   });
 }
@@ -91,16 +92,16 @@ export function updataTextData(id, text){
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded'               
           },   
-          body:  'id='+ id + '&text=' +  text           
+          body:  JSON.stringify({"id":id,"text":text})
     })
     .then(response => response.json())
     .then(response=> {            
         resolve(response);
         alert("Server updated");    
-        console.log('updataTextData:'+response );
+        console.log('updataTextData:'+JSON.stringify(response));
       })
     .catch(xx =>{           
-        console.log(xx);
+        console.log(JSON.stringify(xx));
       });
   });
 }
@@ -118,8 +119,7 @@ export function deleteData(id){
           mode: 'cors',                    
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded'               
-          },   
-         // body:  'parent='+ parent + '&child=' +  child           
+          }  
     })
     .then(response => response.json())
     .then(response=> {            
@@ -127,7 +127,7 @@ export function deleteData(id){
         console.log('deleteData:'+response );
       })
     .catch(xx =>{           
-        console.log(xx);
+        console.log(JSON.stringify(xx));
       });
   });
 }

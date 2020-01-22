@@ -5,18 +5,27 @@ header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Content-Range, Content-Disposition, Content-Description, Auth, X-Requested-With');
 
 $arry = [];
-//$dir = 'sqlite:./serverNots.sqlite';
 require 'path.php';
-$dir = 'sqlite:'.$path.'/serverNots.sqlite';
+$dir = 'sqlite:'.$path.'/serverNots.sqlite'; //$dir = 'sqlite:./serverNots.sqlite';
 
 $parent = -1;
-if (isset($_POST['parent'])) {
-    $parent = $_POST['parent'];
-}
-
 $child = -1;
-if (isset($_POST['child'])) {
-    $child = $_POST['child'];
+
+$data = json_decode(file_get_contents('php://input'), true);
+
+if (isset($data['parent'])) {
+    $parent = $data['parent'];
+} else {
+    $res = array('result' => false, 'data' => 'no parent', 'req' => $data);
+    echo json_encode($res);
+    exit;
+}
+if (isset($data['child'])) {
+    $child = $data['child'];
+} else {
+    $res = array('result' => false, 'data' => 'no child', 'req' => $data);
+    echo json_encode($res);
+    exit;
 }
 
 if ($parent > -1 && $child > -1) {
@@ -27,18 +36,6 @@ if ($parent > -1 && $child > -1) {
     $db2 = null;
 }
 
-function find_child($id)
-{
-    global $arry;
-    global  $dir;
-    $SQL2 = "SELECT * FROM sample  WHERE  Parent=$id";
-    $db2 = new PDO($dir) or die('cannot open the database');
-    foreach ($db2->query($SQL2) as $row1) {
-        $arry[] = ['id' => $row1['id'], 'parent' => $row1['parent'], 'caption' => $row1['caption'], 'text' => $row1['text']];
-        find_child($row1['id']);
-    }
-    $db2 = null;
-}
 function myList($id)
 {
     global $arry;
@@ -51,8 +48,7 @@ function myList($id)
     $db2 = null;
 }
 
-//find_child(0);
 myList(0);
-$res = array('result' => 'TRUE', 'data' => $arry);
+$res = array('result' => true, 'data' => $arry);
 
 echo json_encode($res);

@@ -4,27 +4,29 @@ header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Content-Range, Content-Disposition, Content-Description, Auth, X-Requested-With');
 
-$arry = [];
-//$dir = 'sqlite:./serverNots.sqlite';
 require 'path.php';
-$dir = 'sqlite:'.$path.'/serverNots.sqlite';
-
+$dir = 'sqlite:'.$path.'/serverNots.sqlite'; //$dir = 'sqlite:./serverNots.sqlite';
+$data = json_decode(file_get_contents('php://input'), true);
 $id = -1;
-if (isset($_POST['id'])) {
-    $id = $_POST['id'];
-} else {
-    $res = array('result' => 'FALSE', 'data' => '');
-    echo json_encode($res);
-}
 $text = '';
-if (isset($_POST['text'])) {
-    $noNeed = array('"', '\'');
-    $change = array('&quot;', '&apos;');
-    $text = str_replace($noNeed, $change, $_POST['text']);
-} else {
-    $res = array('result' => 'FALSE', 'data' => '');
-    echo json_encode($res);
-}
+
+  if (isset($data['id'])) {
+      $id = $data['id'];
+  } else {
+      $res = array('result' => false, 'data' => 'no id', 'req' => $data);
+      echo json_encode($res);
+      exit;
+  }
+
+  if (isset($data['text'])) {
+      $noNeed = array('"', '\'');
+      $change = array('&quot;', '&apos;');
+      $text = str_replace($noNeed, $change, $data['text']);
+  } else {
+      $res = array('result' => false, 'data' => 'no text');
+      echo json_encode($res);
+      exit;
+  }
 
 if ($id > -1) {
     $SQL = "UPDATE sample SET text='$text' WHERE id = $id";
@@ -34,34 +36,5 @@ if ($id > -1) {
     $db2 = null;
 }
 
-function find_child($id)
-{
-    global $arry;
-    global  $dir;
-    $SQL2 = "SELECT * FROM sample  WHERE  Parent=$id";
-    $db2 = new PDO($dir) or die('cannot open the database');
-    foreach ($db2->query($SQL2) as $row1) {
-        $arry[] = ['id' => $row1['id'], 'parent' => $row1['parent'], 'caption' => $row1['caption'], 'text' => $row1['text']];
-        find_child($row1['id']);
-    }
-    $db2 = null;
-}
-
-function myList($id)
-{
-    global $arry;
-    global  $dir;
-    $SQL2 = "SELECT * FROM sample  WHERE  id>$id order by parent, id";
-    $db2 = new PDO($dir) or die('cannot open the database');
-    foreach ($db2->query($SQL2) as $row1) {
-        $arry[] = ['id' => $row1['id'], 'parent' => $row1['parent'], 'caption' => $row1['caption'], 'text' => $row1['text']];
-    }
-    $db2 = null;
-}
-
-//find_child(0);
-//myList(0);
-
-$res = array('result' => $text, 'data' => $arry);
-
+$res = array('result' => true, 'data' => $data);
 echo json_encode($res);

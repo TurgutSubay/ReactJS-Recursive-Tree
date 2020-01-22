@@ -2,7 +2,7 @@ import React from 'react';
 import { store } from './index';
 import { addChild, updataTextData, deleteData } from './data';
 import { connect } from 'react-redux';
-import {appData, myRefArr} from './App';
+import {myRefArr,instance} from './App';
 
 const addCSS = {
   'backgroundColor': '#335577',
@@ -21,60 +21,28 @@ const updateText = (e) => {
     .catch(err => console.log('There was an error:' + err));
 }
 
-const deleteText = (e) => {
-  e.stopPropagation();
-  if (window.confirm("Do you want to delete current item?")) {
-    let id = store.getState().reduceData.activeElement;
-    deleteData(id)
-      .then((serverData) => {
-        store.dispatch({ type: 'set', payLoad: serverData.data });
-        alert(serverData.data);
-      })
-      .catch(err => console.log('There was an error:' + err));
-  }
-}
 class Nav extends React.Component {
   constructor(props) {
-    super(props);    
+    super(props);
+    this.state = {      
+    }    
     this.navAria = React.createRef();    
   }
-  showData(e) { 
-    let id = e.target.id;
-    console.log('target:'+id);
-    if (this.props.activeElement > 0) {
-      if (myRefArr[this.props.activeElement].current.nodeName === 'BUTTON') {
-        myRefArr[this.props.activeElement].current.classList.add('btn-primary');
-        myRefArr[this.props.activeElement].current.classList.remove('btn-success');
-      }
-      if (myRefArr[this.props.activeElement].current.nodeName === 'UL') {
-        document.getElementById(this.props.activeElement).classList.add('btn-danger');
-        document.getElementById(this.props.activeElement).classList.remove('btn-success');
-      }
+ 
+  deleteElement = (e) => {
+    let deletOrNot = window.confirm("Do you want to delete current item?");
+    if (deletOrNot) {
+      let id = store.getState().reduceData.activeElement;
+      deleteData(id)
+        .then((serverData) => {
+          console.log('activElement: '+serverData.activElement);         
+          store.dispatch({ type: 'set', payLoad: serverData.data });         
+          instance.showData(serverData.activElement,1, serverData.parent);  
+        })
+        .catch(err => console.log('There was an delete element error:' + err));
     }
-    if (myRefArr[id].current.nodeName === 'BUTTON') {
-      myRefArr[id].current.classList.remove('btn-primary');
-      myRefArr[id].current.classList.remove('btn-danger');
-      myRefArr[id].current.classList.add('btn-success');
-    }
-    if (myRefArr[id].current.nodeName === 'UL') {
-      document.getElementById(id).classList.remove('btn-danger');
-      document.getElementById(id).classList.add('btn-success');
-    }
-
-    let stext = "";
-    appData.forEach(element => {
-      if (element.id === id) {
-        stext = element.text;
-      }
-    });
-
-    let node = myRefArr[0].current;
-    node.value = stext;
-    let parent = this.props.activeElement;
-    console.log('showData Parent :'+parent);   
-    store.dispatch({ type: 'setElement', payLoad: id, parents: parent, text: stext });
   }
-
+  
   AddElement = (e) => {
     let parent = this.props.activeElement; //store.getState().reduceData.activeElement;
     if (e.target.id === 'newRoot'){
@@ -84,16 +52,17 @@ class Nav extends React.Component {
     let sText = document.getElementById('myText').value;
     let sCaption = document.getElementById('myCaption').value;
     if (sCaption.length < 1) {
-      alert(parent + ' ' + sCaption);
+      alert(parent + '  Caption needs ');
     } else {
       addChild(parent, sText, sCaption)
         .then((serverData) => {        
-          store.dispatch({ type: 'set', payLoad: serverData.data });
-          this.showData({target:{id:serverData.newAdded}});         
+          store.dispatch({ type: 'set', payLoad: serverData.data });         
+          instance.showData(serverData.newAdded, 1,serverData.parent);
         })
-        .catch(err => console.log('There was an error:' + err));
+        .catch(err => console.log('There was an add element error:' + err));
     }
   }
+
 render(){
   return (
     <nav className="navbar navbar-expand-sm bg-dark navbar-dark" style={addCSS} id='navAria'  ref={this.navAria}>
@@ -103,7 +72,7 @@ render(){
        <button type="button" className="btn btn-success form-inline" id= "newChild" onClick={(e) => this.AddElement(e)}>New Child</button>&nbsp;&nbsp;
        <button type="button" className="btn btn-success form-inline" id="newRoot" onClick={(e) => this.AddElement(e)}>New Root</button>&nbsp;&nbsp;
        <button type="button" className="btn btn-warning form-inline" onClick={(e) => updateText(e)}>Current Text Server Update </button>&nbsp;&nbsp;
-       <button type="button" className="btn btn-danger form-inline" onClick={(e) => deleteText(e)}>Delete</button>
+       <button type="button" className="btn btn-danger form-inline" onClick={(e) => this.deleteElement(e)}>Delete</button>
       </div>
     </nav>
   );
@@ -118,4 +87,5 @@ function mapStateToProps(state) {
     activeElement: state.reduceData.activeElement
   }
 }
+
 export default connect(mapStateToProps)(Nav);
