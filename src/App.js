@@ -228,7 +228,6 @@ class App extends React.Component {
   }
   
   render() {
-    //render
     return <div id="main" ref={this.main}  style={styleMain} onMouseMove={(e)=> this.mousemove(e)}>
       <Nav/>
       <div id="leftPanel" ref={this.leftPanel} style={styleLeft} onDragOver={(e) => this.allowDrop(e)} onDrop={(e) => this.drop(e)}>
