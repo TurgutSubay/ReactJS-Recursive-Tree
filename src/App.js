@@ -1,5 +1,5 @@
 import React from 'react';
-import Nav from './nav.js'
+import Nav from './nav.js';
 import './css/App.css';
 import { Data, changeParent } from './data.js';
 import { store } from './index.js';
@@ -24,19 +24,19 @@ class App extends React.Component {
       listLi: [],
       text: "",
       myRefArr: [],
-      ii: 0,     
+      ii: 0,
     }
     this.divText = React.createRef();
-    this.leftPanel= React.createRef();    
-    this.main= React.createRef();    
+    this.leftPanel= React.createRef();
+    this.main= React.createRef();
   }
   refCreate(id) {
     myRefArr[id] = React.createRef();
   }
 
-  componentDidMount() {   
+  componentDidMount() {
    
-   let nawAriaH =  parseInt(getComputedStyle(document.getElementById('navAria'),null).height);   
+   let nawAriaH =  parseInt(getComputedStyle(document.getElementById('navAria'),null).height);
    this.divText.current.style.height  =  window.innerHeight - nawAriaH + 'px';
    this.leftPanel.current.style.height  =  window.innerHeight - nawAriaH + 'px';
    document.getElementById('infoPanel').style.height  =  window.innerHeight - nawAriaH + 'px';
@@ -44,9 +44,9 @@ class App extends React.Component {
    let infoPanelW  = parseInt(getComputedStyle(document.getElementById('infoPanel'),null).width); 
    let leftPanelW  = parseInt(getComputedStyle(document.getElementById('leftPanel'),null).width);
    let mainW  = parseInt(getComputedStyle(document.getElementById('main'),null).width);
-   let divText = document.getElementById('divText');   
+   let divText = document.getElementById('divText');
    startTextWidth =   mainW - infoPanelW - leftPanelW ;
-   startLeftPanelWidth = leftPanelW; 
+   startLeftPanelWidth = leftPanelW;
    this.divText.current.style.width = mainW - infoPanelW - leftPanelW + 'px';
    console.log('W: ' + divText.style.width);
     this.refCreate(0);
@@ -68,21 +68,22 @@ class App extends React.Component {
     myRefArr[id].current.classList.toggle('nestedClosed');
     myRefArr[id].current.classList.toggle('nestedShow');
     e.target.classList.toggle('myCaret-down');
+    document.querySelector("[lang='" + id + "']").classList.toggle('myCaret-down');
   }
 
-   showData  = (e,server=0, prnt=0) => {
+   showData  = (e, server=0, prnt=0) => {
     instance = this;
     let id =  0;
     if (server === 0){
       id = e.target.id;
-      console.log('showData id:'+ id); 
+      //console.log('showData id:'+ id  ,myRefArr[id].current.nodeName);
     }else{
       id = e;
       this.setState({ii:id});
-      console.log('showData Server id:'+ id); 
+      //console.log('showData Server id:'+ id);
     }
     if (this.props.activeElement > 0) {
-      if (myRefArr[this.props.activeElement].current){      
+      if (myRefArr[this.props.activeElement].current){
       if (myRefArr[this.props.activeElement].current.nodeName === 'BUTTON') {
         myRefArr[this.props.activeElement].current.classList.add('btn-primary');
         myRefArr[this.props.activeElement].current.classList.remove('btn-success');
@@ -101,12 +102,13 @@ class App extends React.Component {
     if (myRefArr[id].current.nodeName === 'UL') {
       document.getElementById(id).classList.remove('btn-danger');
       document.getElementById(id).classList.add('btn-success');
-      console.log(e);//openedLevel.push
     }
+    document.querySelectorAll(".myCaretActive").forEach(item=> item.classList.remove('myCaretActive'));
+    document.querySelector("[lang='" + id + "']").classList.add('myCaretActive');
 
-    let wx = myRefArr[id].current.getAttribute('level') * 20;  // *40  padding-inline-start   
+    let wx = myRefArr[id].current.getAttribute('level') * 20;  // *40  padding-inline-start
     let divTextL = startLeftPanelWidth;
-    this.divText.current.style.left = divTextL +  wx + 'px';    
+    this.divText.current.style.left = divTextL +  wx + 'px';
     this.divText.current.style.width =  startTextWidth - wx + 'px';
     this.leftPanel.current.style.width = startLeftPanelWidth + wx + 'px';
     
@@ -126,7 +128,7 @@ class App extends React.Component {
     }}else{
       parent = prnt;
     }
-    console.log('showData id: '+ id+ '  parent : '+ parent);
+    console.log('showData id: '+ id+ '  parent : '+ parent, myRefArr[id].current.nodeName);
     store.dispatch({ type: 'setElement', payLoad: id, parents: parent, text: stext });
   }
 
@@ -157,22 +159,22 @@ class App extends React.Component {
       let caption = appData[i].caption;
       this.refCreate(id);
       
-      if (this.query(id).length > 0) {        
+      if (this.query(id).length > 0) {
         eArry.push(
-          <li level={level} key={id} draggable="true" onDragStart={(e) => this.drag(e)} onDragOver={(e) => this.allowDrop(e)} onDrop={(e) => this.drop(e)}> 
-            <div style={styleHidden}>{level++}</div>          
+          <li level={level} key={id} draggable="true" onDragStart={(e) => this.drag(e)} onDragOver={(e) => this.allowDrop(e)} onDrop={(e) => this.drop(e)}>
+            <div style={styleHidden}>{level++}</div>
             <span lang={id} className="myCaret" onClick={(id) => this.setCSS(id)}>
               <div id={id} parent={parent} value={row} className="btn btn-danger top10" onClick={(e) => this.showData(e)}>{caption}</div>
-            </span>            
+            </span>
             <ul level={level} ref={myRefArr[id]} className={this.state.liCSS} data={text}>
               {this.tree_(id)}
             </ul>
-            <div style={styleHidden}>{level--}</div>               
+            <div style={styleHidden}>{level--}</div>
           </li>          
         );               
       } else {
         eArry.push(
-          <li level={level} value={id} draggable="true" parent={parent} onDragStart={(e) => this.drag(e)} onDragOver={(e) => this.allowDrop(e)} onDrop={(e) => this.drop(e)} key={id} data1={text}><span className="myCaret"></span>
+          <li level={level} value={id} draggable="true" parent={parent} onDragStart={(e) => this.drag(e)} onDragOver={(e) => this.allowDrop(e)} onDrop={(e) => this.drop(e)} key={id} data1={text}><span lang={id} className="myCaret"></span>
             <button level={level} ref={myRefArr[id]} id={id} parent={parent} type="button" className="btn btn-primary top10" onClick={(e) => this.showData(e)}>{caption}</button>
           </li>);
       }
@@ -223,14 +225,14 @@ class App extends React.Component {
     store.dispatch({ type: 'setText', text: stext, id: this.props.id });
   }
 
-  mousemove(e){      
+  mousemove(e){
     //let leftPanelW  = parseInt(getComputedStyle(document.getElementById('leftPanel'),null).width);
   }
   
   render() {
-    console.log('App: render');
-    return <div id="main" ref={this.main}  style={styleMain} onMouseMove={(e)=> this.mousemove(e)}>   
-      <Nav/>   
+    //console.log('App: render');
+    return <div id="main" ref={this.main}  style={styleMain} onMouseMove={(e)=> this.mousemove(e)}>
+      <Nav/>
       <div id="leftPanel" ref={this.leftPanel} style={styleLeft} onDragOver={(e) => this.allowDrop(e)} onDrop={(e) => this.drop(e)}>
         <ul className="myUL">
           {this.tree_(0)}
@@ -238,7 +240,7 @@ class App extends React.Component {
       </div>
       <div style={styleTextAria } id='divText' ref={this.divText}>
         <textarea ref={myRefArr[0]} id="myText" style={this.props.myTextarea} onKeyUp={(e) => this.myTextChange(e)} rows="4" cols="50" />
-      </div>     
+      </div>
       <RightSide />
     </div>
   };

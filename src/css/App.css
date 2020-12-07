@@ -11,8 +11,8 @@ ul{
 
 .top10 {
   margin-top:5px;
-  height:25px;
-  padding: 3px;
+  height:23px;
+  padding: 1px;
 }
 .myCaret {
   cursor: pointer;
@@ -35,9 +35,11 @@ ul{
  -webkit-transform: rotate(90deg); /* Safari */
  margin-right: 10px;
  transform: rotate(90deg);
- color: green;
+ color: red;
 }
-
+.myCaretActive::before{
+  color: green;
+}
 .nestedClosed {
   display: none;
 }
@@ -45,5 +47,5 @@ ul{
 /* Show the nested list when the user clicks on the caret/arrow (with JavaScript) */
 .nestedShow {
   display: block;
-  padding-inline-start: 20px;
+  padding-inline-start: 15px;
 }
