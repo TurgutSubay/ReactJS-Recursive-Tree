@@ -35,7 +35,6 @@ ul{
  -webkit-transform: rotate(90deg); /* Safari */
  margin-right: 10px;
  transform: rotate(90deg);
- color: green;
 }
 
 .nestedClosed {
@@ -45,5 +44,4 @@ ul{
 /* Show the nested list when the user clicks on the caret/arrow (with JavaScript) */
 .nestedShow {
   display: block;
-  padding-inline-start: 20px;
 }

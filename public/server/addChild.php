@@ -50,6 +50,7 @@ function myList($id)
     global $arry;
     global  $dir;
     $SQL2 = "SELECT * FROM sample  WHERE  id>$id order by parent, id";
+    $SQL2 = "SELECT * FROM sample  WHERE  id>$id order by parent, caption";
     $db2 = new PDO($dir) or die('cannot open the database');
     foreach ($db2->query($SQL2) as $row1) {
         $noNeed = array('&quot;', '&apos;');

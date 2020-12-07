@@ -61,13 +61,20 @@ class App extends React.Component {
   setCSS(e) {
     let id=-1;
     if (e.target.nodeName === "SPAN") {
+      //document.querySelector("[lang='" + id + "']").classList.add('myCaret-down'); 
        id = e.target.lang;     
     }else{
      id = e.target.id;
     }
-    myRefArr[id].current.classList.toggle('nestedClosed');
-    myRefArr[id].current.classList.toggle('nestedShow');
-    e.target.classList.toggle('myCaret-down');
+    if (myRefArr[id].current.className === 'nestedClosed') {
+      myRefArr[id].current.classList.remove('nestedClosed');
+      myRefArr[id].current.classList.add('nestedShow');
+      document.querySelector("[lang='" + id + "']").classList.add('myCaret-down');
+    } else {
+      myRefArr[id].current.classList.remove('nestedShow');
+      myRefArr[id].current.classList.add('nestedClosed');
+      document.querySelector("[lang='" + id + "']").classList.remove('myCaret-down');
+    }
   }
 
    showData  = (e,server=0, prnt=0) => {
@@ -104,7 +111,7 @@ class App extends React.Component {
       console.log(e);//openedLevel.push
     }
 
-    let wx = myRefArr[id].current.getAttribute('level') * 20;  // *40  padding-inline-start   
+    let wx = myRefArr[id].current.getAttribute('level') * 40;  // *40  padding-inline-start   
     let divTextL = startLeftPanelWidth;
     this.divText.current.style.left = divTextL +  wx + 'px';    
     this.divText.current.style.width =  startTextWidth - wx + 'px';

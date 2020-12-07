@@ -41,6 +41,7 @@ function myList($id)
     global $arry;
     global  $dir;
     $SQL2 = "SELECT * FROM sample  WHERE  id>$id order by parent, id";
+	$SQL2 = "SELECT * FROM sample  WHERE  id>$id order by parent, caption";
     $db2 = new PDO($dir) or die('cannot open the database');
     foreach ($db2->query($SQL2) as $row1) {
         $arry[] = ['id' => $row1['id'], 'parent' => $row1['parent'], 'caption' => $row1['caption'], 'text' => $row1['text']];
@@ -49,6 +50,6 @@ function myList($id)
 }
 
 myList(0);
-$res = array('result' => true, 'data' => $arry);
+$res = array('result' => true, 'data' => $arry,'comingParent'=>$parent,'comingChilren'=>$child);
 
 echo json_encode($res);
