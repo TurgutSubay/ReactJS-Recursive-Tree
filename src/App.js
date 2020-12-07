@@ -76,23 +76,21 @@ class App extends React.Component {
     let id =  0;
     if (server === 0){
       id = e.target.id;
-      //console.log('showData id:'+ id  ,myRefArr[id].current.nodeName);
     }else{
       id = e;
       this.setState({ii:id});
-      //console.log('showData Server id:'+ id);
     }
     if (this.props.activeElement > 0) {
       if (myRefArr[this.props.activeElement].current){
-      if (myRefArr[this.props.activeElement].current.nodeName === 'BUTTON') {
-        myRefArr[this.props.activeElement].current.classList.add('btn-primary');
-        myRefArr[this.props.activeElement].current.classList.remove('btn-success');
-      }
-      if (myRefArr[this.props.activeElement].current.nodeName === 'UL') {
-        document.getElementById(this.props.activeElement).classList.add('btn-danger');
-        document.getElementById(this.props.activeElement).classList.remove('btn-success');
-      }
-    }
+        if (myRefArr[this.props.activeElement].current.nodeName === 'BUTTON') {
+          myRefArr[this.props.activeElement].current.classList.add('btn-primary');
+          myRefArr[this.props.activeElement].current.classList.remove('btn-success');
+        }
+        if (myRefArr[this.props.activeElement].current.nodeName === 'UL') {
+          document.getElementById(this.props.activeElement).classList.add('btn-danger');
+          document.getElementById(this.props.activeElement).classList.remove('btn-success');
+        }
+      } 
     }
     if (myRefArr[id].current.nodeName === 'BUTTON') {
       myRefArr[id].current.classList.remove('btn-primary');
@@ -123,9 +121,10 @@ class App extends React.Component {
     node.value = stext;
     let parent = -1;
     if (server === 0){
-    if (e.target.hasAttribute('parent')) {
-      parent = e.target.getAttribute('parent');
-    }}else{
+      if (e.target.hasAttribute('parent')) {
+        parent = e.target.getAttribute('parent');
+      }
+    }else{
       parent = prnt;
     }
     console.log('showData id: '+ id+ '  parent : '+ parent, myRefArr[id].current.nodeName);
@@ -183,7 +182,6 @@ class App extends React.Component {
   }
 
   allowDrop(e) {
-    // document.getElementById('myCaption').value=e.target.nodeName;
     if (e.target.nodeName === "BUTTON" || e.target.nodeName === "DIV") {
       e.preventDefault();
     } else {
@@ -230,7 +228,6 @@ class App extends React.Component {
   }
   
   render() {
-    //console.log('App: render');
     return <div id="main" ref={this.main}  style={styleMain} onMouseMove={(e)=> this.mousemove(e)}>
       <Nav/>
       <div id="leftPanel" ref={this.leftPanel} style={styleLeft} onDragOver={(e) => this.allowDrop(e)} onDrop={(e) => this.drop(e)}>
