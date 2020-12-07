@@ -16,7 +16,7 @@ export function Data(){
         .then(response => response.json())
         .then(response=> {            
             resolve(response);        
-            console.log('Data response:'+response );            
+            //console.log('Data response:'+JSON.stringify(response));            
           })
         .catch(xx =>{           
             console.log(JSON.stringify(xx));
@@ -51,6 +51,35 @@ export function changeParent(parent, child){
       });
   });
 }
+
+export function updateRatingScore(id, ratingScore){
+  return new Promise(function(resolve, reject){        
+    fetch('http://localhost/react/reactjs-recursive-tree/public/server/updateRatingScore.php',
+    {
+          method: "POST",
+          cache: 'no-cache',               
+          credentials: 'same-origin', 
+          redirect: 'follow', 
+          referrer: 'no-referrer', 
+          mode: 'cors',                    
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'               
+          },   
+          body:  JSON.stringify({"id": id , "ratingScore" :  ratingScore})
+		 
+    })
+    .then(response => response.json())
+    .then(response=> {            
+        resolve(response);        
+        console.log('changeParent:'+response );
+      })
+    .catch(xx =>{           
+        console.log(JSON.stringify(xx));
+      });
+  });
+}
+
+
 export function addChild(parent, text,caption){
   console.log(parent+ text+ caption);
   return new Promise(function(resolve, reject){        

@@ -5,6 +5,7 @@ let init= {
    parents:-1,
    activeElement:-1,
    text:'',
+   ratingScore:0,
    myTextarea: {
     height: '100%',
     width: '100%',
@@ -25,7 +26,8 @@ const dataR = (state=init,action) => {
             ...newState,
             activeElement :action.payLoad,
             parents : action.parents,
-            text : action.text
+            text : action.text,
+            ratingScore: parseInt(action.ratingScore),
         } 
         return newS;
         case 'textSizeUpDown':
@@ -46,6 +48,13 @@ const dataR = (state=init,action) => {
           });          
        
         newState.text = action.text; 
+        return newState;
+        case 'setRatingScore':        
+        newState.data.forEach(element => {
+            if (element.id === action.id){
+              element.ratingScore = action.ratingScore;
+            }
+          });          
         return newState;
         default: return  newState;
     }

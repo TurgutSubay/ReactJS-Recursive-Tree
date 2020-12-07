@@ -1,7 +1,7 @@
 import React from 'react';
 import Nav from './nav.js';
 import './css/App.css';
-import { Data, changeParent } from './data.js';
+import { Data, changeParent, updateRatingScore } from './data.js';
 import { store } from './index.js';
 import RightSide from './rightSide';
 import { connect } from 'react-redux';
@@ -114,6 +114,10 @@ class App extends React.Component {
     appData.forEach(element => {
       if (element.id === id) {
         stext = element.text;
+        //let newScore = parseInt(element.ratingScore) +1; 
+        updateRatingScore(element.id, ++element.ratingScore); 
+        console.log("ratingScore:",element.ratingScore,element.caption);       
+        //store.dispatch({ type: 'setRatingScore', id: element.id ,ratingScore: newScore });
       }
     });
 
@@ -136,9 +140,12 @@ class App extends React.Component {
     appData = this.props.data;
     for (let row1 = 0; row1 < appData.length; row1++) {
       if (Number(appData[row1].parent) === Number(parentRow)) {
-        arrCh.push(row1);
+        arrCh.push({parentRowNoInData:row1, ratingScore:appData[row1].ratingScore});
       }
     }
+    arrCh.sort(function (a, b) {
+      return (b.ratingScore - a.ratingScore);
+    });
     return arrCh;
   }
 
@@ -151,7 +158,7 @@ class App extends React.Component {
     var arry = this.query(parentRow);
 
     for (var row = 0; row < arry.length; row++) {
-      let i = arry[row];
+      let i = arry[row].parentRowNoInData;
       let id = appData[i].id;
       let parent = appData[i].parent;
       let text = appData[i].text;
@@ -249,6 +256,7 @@ function mapStateToProps(state) {
     text: state.reduceData.text,
     id: state.reduceData.activeElement,
     data: state.reduceData.data,
+    ratingScore: state.reduceData.ratingScore,
     activeElement: state.reduceData.activeElement
   }
 }

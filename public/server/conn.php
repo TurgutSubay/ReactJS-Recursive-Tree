@@ -18,7 +18,13 @@ function find_child($id)
         $noNeed = array('"', '\'');
         $change = array('&quot;', '&apos;');
         $text = str_replace($noNeed, $change, $row1['text']);
-        $arry[] = ['id' => $row1['id'], 'parent' => $row1['parent'], 'caption' => $row1['caption'], 'text' => $text];
+        $arry[] = [
+            'id' => $row1['id'], 
+            'parent' => $row1['parent'], 
+            'caption' => $row1['caption'],
+            'text' => $text,
+            'ratingScore' => $row1['ratingScore']
+        ];
         find_child($row1['id']);
     }
     $db2 = null;
@@ -36,7 +42,12 @@ function myList($id)
         $change = array('"', '\'');
         $text = str_replace($noNeed, $change, $row1['text']);
         $caption = str_replace($noNeed, $change, $row1['caption']);
-        $arry[] = ['id' => $row1['id'], 'parent' => $row1['parent'], 'caption' => $caption, 'text' => $text];
+        $arry[] = [
+            'id' => $row1['id'], 
+            'parent' => $row1['parent'], 
+            'caption' => $caption, 'text' => $text,
+            'ratingScore' => $row1['ratingScore']
+        ];
     }
     $db2 = null;
 }
